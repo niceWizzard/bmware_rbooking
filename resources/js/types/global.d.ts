@@ -9,7 +9,7 @@ declare global {
     }
 
     /* eslint-disable no-var */
-    var route: typeof ziggyRoute;
+    let route: typeof ziggyRoute;
 }
 
 declare module 'vue' {
@@ -21,3 +21,13 @@ declare module 'vue' {
 declare module '@inertiajs/core' {
     interface PageProps extends InertiaPageProps, AppPageProps {}
 }
+
+
+
+declare module '@vue/runtime-core' {
+    interface ComponentCustomProperties {
+        route: typeof ziggyRoute;
+    }
+}
+
+
