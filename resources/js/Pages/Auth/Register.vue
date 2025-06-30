@@ -10,7 +10,9 @@
       email: '',
       password: '',
       password_confirmation: '',
-      name: '',
+      first_name: '',
+      last_name: '',
+      mobile: '',
   });
 
 </script>
@@ -25,6 +27,22 @@
       </template>
       <form @submit.prevent="form.post(route('register'))"
             class="w-96 flex flex-col gap-4 ">
+          <div class="flex gap-2">
+              <div class="flex flex-col gap-1">
+                  <FloatLabel variant="on" class="w-full" >
+                      <InputText class="w-full" id="first_name" v-model="form.first_name"  />
+                      <label for="first_name">First Name</label>
+                  </FloatLabel>
+                  <p class="text-sm font-light text-red-500" v-if="form.errors.first_name">{{form.errors.first_name}}</p>
+              </div>
+              <div class="flex flex-col gap-1">
+                  <FloatLabel variant="on" class="w-full" >
+                      <InputText class="w-full" id="last_name" v-model="form.last_name"  />
+                      <label for="last_name">Last Name</label>
+                  </FloatLabel>
+                  <p class="text-sm font-light text-red-500" v-if="form.errors.last_name">{{form.errors.last_name}}</p>
+              </div>
+          </div>
           <div class="flex flex-col gap-1">
               <FloatLabel variant="on" class="w-full" >
                   <InputText class="w-full" id="email" v-model="form.email" type="email"  />
@@ -34,11 +52,12 @@
           </div>
           <div class="flex flex-col gap-1">
               <FloatLabel variant="on" class="w-full" >
-                  <InputText class="w-full" id="name" v-model="form.name"  />
-                  <label for="name">Name</label>
+                  <InputText class="w-full" id="mobile" v-model="form.mobile" type="text"  />
+                  <label for="mobile">Mobile Number</label>
               </FloatLabel>
-              <p class="text-sm font-light text-red-500" v-if="form.errors.email">{{form.errors.email}}</p>
+              <p class="text-sm font-light text-red-500" v-if="form.errors.mobile">{{form.errors.mobile}}</p>
           </div>
+
           <div class="flex flex-col gap-1">
               <FloatLabel variant="on" class="w-full" >
                   <InputText class="w-full" id="password" v-model="form.password"  type="password" />
