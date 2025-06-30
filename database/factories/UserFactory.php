@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -40,4 +41,12 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function withPatient() : static {
+        $patient = Patient::factory()->create();
+        return $this->state(fn (array $attributes) => [
+            'patient_id' => $patient->id,
+        ]);
+    }
+
 }
