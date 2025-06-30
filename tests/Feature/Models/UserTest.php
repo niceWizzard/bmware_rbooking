@@ -21,3 +21,13 @@ test('user has is<role> attributes', function () {
     $this->assertTrue($user->is_patient);
     $this->assertFalse($user->is_admin);
 });
+
+
+test('user getDashboardLink works', function () {
+    $user = User::factory()->withPatient()->create();
+    $this->assertEquals(
+        route('patient.dashboard'),
+        $user->getDashboardLink(),
+    );
+
+});

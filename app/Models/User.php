@@ -66,6 +66,10 @@ class User extends Authenticatable
         return Attribute::get(fn () => $this->role === self::ROLE_ADMIN);
     }
 
-
+    public function getDashboardLink() : string {
+        return match ($this->role) {
+            default => route('patient.dashboard'),
+        };
+    }
 
 }
