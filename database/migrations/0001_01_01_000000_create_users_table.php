@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->foreignId('patient_id')->nullable()->constrained('patients');
         });
 
         Schema::create('booking_password_reset_tokens', function (Blueprint $table) {
