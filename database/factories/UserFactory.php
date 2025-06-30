@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -43,11 +44,20 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function withPatient() : static {
-        $patient = Patient::factory()->create();
-        return $this->state(fn (array $attributes) => [
-            'patient_id' => $patient->id,
-        ]);
+    public function withPatient(array $attributes = []): static
+    {
+        return $this
+            ->afterMaking(function (User $user) use ($attributes) {
+                $patient = Patient::factory()->make($attributes);
+                $user->setRelation('patient', $patient);
+            })
+            ->afterCreating(function (User $user) use ($attributes) {
+                $patient = Patient::factory()->create($attributes);
+                $user->patient_id = $patient->id;
+                $user->save();
+            });
     }
+
+
 
 }
