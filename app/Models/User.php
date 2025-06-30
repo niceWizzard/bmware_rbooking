@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,6 +11,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    public const ROLE_PATIENT = 'patient';
+    public const ROLE_ADMIN = 'admin';
+
     protected $table = 'booking_users';
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -50,6 +54,18 @@ class User extends Authenticatable
     public function patient(): HasOne {
         return $this->hasOne(Patient::class, 'id', 'patient_id');
     }
+
+    public function isPatient(): Attribute
+    {
+        return Attribute::get(fn () => $this->role === self::ROLE_PATIENT);
+    }
+
+
+    public function isAdmin(): Attribute
+    {
+        return Attribute::get(fn () => $this->role === self::ROLE_ADMIN);
+    }
+
 
 
 }
