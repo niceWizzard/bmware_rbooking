@@ -9,7 +9,9 @@ Route::middleware(['guest'])->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/login', 'create')->name('login');
         Route::post('/login', 'store');
-        Route::post('/logout', 'destroy')->name('logout');
+        Route::post('/logout', 'destroy')
+            ->withoutMiddleware('guest')
+            ->name('logout');
 
     });
 
