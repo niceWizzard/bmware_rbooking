@@ -13,5 +13,9 @@ Route::get('/', static function () {
     ]);
 });
 
+Route::get('/dashboard', static function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
+
 
 require __DIR__.'/auth.php';

@@ -37,7 +37,7 @@ const form = useForm({
                 </FloatLabel>
                 <p class="text-sm font-light text-red-500" v-if="form.errors.password">{{form.errors.password}}</p>
             </div>
-            <Button type="submit">Login</Button>
+            <Button type="submit" :disabled="form.processing">Login</Button>
             <p class=" font-light text-center">
                 Don't have an account? <a :href="route('register')" class="font-medium text-primary">Register</a>
             </p>
