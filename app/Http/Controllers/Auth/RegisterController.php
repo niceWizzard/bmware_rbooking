@@ -49,6 +49,7 @@ class RegisterController extends Controller
             'type_of_transaction' => 'Cash',
         ]);
 
+
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -59,6 +60,6 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard'));
+        return redirect()->intended(route('patient.dashboard'));
     }
 }
