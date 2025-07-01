@@ -4,6 +4,7 @@
     import Popover from 'primevue/popover'
     import {router, usePage} from "@inertiajs/vue3";
 
+    const loggingOut = ref(false);
     const {props} = usePage();
     const {user} = props.auth;
     const navLinks = user!.role === 'patient' ? [
@@ -25,6 +26,7 @@
         overlayRef.value.toggle(event)
     }
     function logout() {
+        loggingOut.value = true;
         router.post(route('logout'));
     }
 </script>
@@ -60,11 +62,14 @@
                         Settings
                     </li>
                     <li class="border-t my-1"></li>
-                    <button @click="logout"
-                        class="px-4 pl-6 py-2 hover:bg-gray-100 cursor-pointer text-start  text-red-500"
-                    >
-                        Log out
-                    </button>
+                    <Button
+                        @click="logout"
+                        :loading="loggingOut"
+                        label="Log out"
+                        severity="danger"
+                        variant="text"
+                        icon="pi pi-sign-out"
+                    />
                 </ul>
             </Popover>
         </div>
