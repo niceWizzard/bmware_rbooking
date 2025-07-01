@@ -5,7 +5,8 @@
     import {router, usePage} from "@inertiajs/vue3";
 
     const {props} = usePage();
-    const navLinks = props.auth.user!.role === 'patient' ? [
+    const {user} = props.auth;
+    const navLinks = user!.role === 'patient' ? [
         {
             text: 'Dashboard',
             link: route('patient.dashboard'),
@@ -46,7 +47,7 @@
             <Button
                 type="button"
                 icon="pi pi-user"
-                label="Profile"
+                :label="user?.role === 'patient' ? user.patient.first_name : user?.admin.name"
                 @click="toggle"
                 aria-haspopup="true"
             />
