@@ -18,7 +18,6 @@ class AppointmentFactory extends Factory
         $endTime = date('H:i:s', strtotime($startTime . ' +1 hour'));
 
         return [
-            'appointment_number' => strtoupper(Str::random(10)),
             'clinic' => $this->faker->randomElement(['Dental', 'General Medicine', 'Pediatrics']),
             'appointment_for' => $this->faker->name,
             'appointment_date' => $date,

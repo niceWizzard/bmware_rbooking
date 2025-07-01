@@ -31,5 +31,22 @@ class Appointment extends Model
         );
     }
 
+    public static function booted(): void
+    {
+        static::creating(static function (Appointment $appointment) {
+            $appointment->appointment_number = self::generateAppointmentNumber();
+        });
+    }
+
+    public static function generateAppointmentNumber(): string
+    {
+        $prefix = 'APT';
+        $year = now()->year;
+        $lastNumber = self::whereYear('created_at', now()->year)->count();
+        $nextNumber = str_pad($lastNumber + 1, 6, '0', STR_PAD_LEFT);
+        return $prefix . $year . $nextNumber;
+    }
+
+
 
 }
