@@ -30,7 +30,7 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('patient.dashboard'));
+        return redirect()->intended(Auth::user()->getDashboardLink());
     }
 
     /**
