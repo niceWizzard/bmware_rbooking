@@ -71,7 +71,11 @@
               v-model="form.password_confirmation"
               type="password"
           />
-          <Button type="submit" :disabled="form.processing">Continue</Button>
+          <Button
+              type="submit"
+              :loading="form.processing"
+              label="Continue"
+          />
           <p class=" font-light text-center">
               Already have an account?
               <Link :href="route('login')" class="font-medium text-primary">

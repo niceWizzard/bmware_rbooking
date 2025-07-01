@@ -43,7 +43,11 @@ function onFormSubmit() {
                 v-model="form.password"
             />
 
-            <Button type="submit" :disabled="form.processing">Login</Button>
+            <Button
+                type="submit"
+                label="Login"
+                :loading="form.processing"
+            />
             <p class=" font-light text-center">
                 Don't have an account? <Link :href="route('register')" class="font-medium text-primary">Register</Link>
             </p>
