@@ -1,9 +1,22 @@
-export interface User {
+export type User = {
     id: number;
     name: string;
     email: string;
     email_verified_at?: string;
-    role: 'admin' | 'patient';
+    role: 'admin';
+    admin: {
+        name: string;
+    }
+} | {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at?: string;
+    role: 'patient';
+    patient: {
+        first_name: string;
+        last_name: string;
+    }
 }
 
 export type PageProps<
