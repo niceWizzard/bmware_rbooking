@@ -32,7 +32,7 @@
 </script>
 
 <template>
-    <aside class="w-[18rem] flex flex-col bg-green-500 py-6 items-center justify-between ">
+    <aside class="w-[18rem] fixed top-0 left-0 h-screen flex flex-col bg-green-500 py-6 items-center justify-between ">
         <h3 class="text-white font-semibold text-xl">
             Booking
         </h3>

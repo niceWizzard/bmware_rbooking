@@ -5,8 +5,9 @@
 </script>
 
 <template>
-    <div class="flex min-h-screen w-full">
+    <div class="flex min-h-screen w-full relative">
         <Sidebar/>
+        <div class="h-screen w-[18rem]"></div>
         <main class="flex-1 flex flex-col">
             <header class="flex items-center justify-between p-4 shadow-sm">
                 <h4>
