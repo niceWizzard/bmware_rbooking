@@ -1,10 +1,12 @@
 <script setup lang="ts">
     import Sidebar from '@/Components/Sidebar.vue'
+    import Toast from 'primevue/toast'
 
     defineProps<{headerTitle: string}>()
 </script>
 
 <template>
+    <Toast position="bottom-right"/>
     <div class="flex min-h-screen w-full relative">
         <Sidebar/>
         <div class="h-screen w-[14rem]"></div>

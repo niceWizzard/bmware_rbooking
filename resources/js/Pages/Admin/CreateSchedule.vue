@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import AuthLayout from "@/Layouts/AuthLayout.vue";
 import Button from 'primevue/button'
+import ConfirmDialog from 'primevue/confirmdialog'
 import { Head } from "@inertiajs/vue3";
 import FullCalendar from '@fullcalendar/vue3';
 import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import {CalendarOptions, EventApi} from '@fullcalendar/core'
 import {onMounted, ref} from "vue";
+import dayjs from "dayjs";
+import {useConfirm, useToast} from "primevue";
 
 
 const calendarRef = ref<any>();
+const toast = useToast();
+const confirmPopup = useConfirm();
 
 const calendarOptions : CalendarOptions = {
     plugins: [timeGridPlugin, interactionPlugin],
@@ -25,8 +30,22 @@ const calendarOptions : CalendarOptions = {
     droppable: true,
     editable: true,
     eventClick(info: any){
-        if(confirm("Do you want to remove this?"))
-            info.event.remove();
+        confirmPopup.require({
+            message: 'Do you want to remove this event?',
+            icon: 'pi pi-exclamation-triangle',
+            rejectProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptProps: {
+                label: 'Remove',
+                severity: 'danger',
+            },
+            accept: () => {
+                info.event.remove();
+            },
+        })
     },
     dateClick(info: any) {
         info.view.calendar.addEvent({
@@ -51,30 +70,77 @@ onMounted(() => {
     }
 });
 
-function resetButtonClick() {
-    const calendarApi = calendarRef.value.getApi()
-    calendarApi?.removeAllEvents();
+function resetButtonClick(event: MouseEvent) {
+    confirmPopup.require({
+        message: 'Are you sure you want to reset everything?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Cancel',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptProps: {
+            label: 'Reset',
+            severity: 'danger',
+        },
+        accept: () => {
+            const calendarApi = calendarRef.value.getApi()
+            calendarApi?.removeAllEvents();
+        },
+    })
+
 }
 
 function finishButtonClicked() {
     const calendarApi = calendarRef.value.getApi()
-    const events: EventApi[] = calendarApi.getEvents()
-    console.log(
-        events.map(e => ({
+    const eventsFromCalendar: EventApi[] = calendarApi.getEvents()
+    const events = eventsFromCalendar.map(e => ({
         id: e.id,
         title: e.title,
         start: e.start,
         end: e.end
-    })));
+    }))
+    if(events.length === 0){
+        toast.add({
+            detail:"Please add a schedule.",
+            life: 2000,
+            closable: false,
+        })
+        return;
+    }
+    const eventCountsByDate = events.reduce((acc, event) => {
+        const dateKey = dayjs(event.start).day();
+        acc[dateKey] = (acc[dateKey] || 0) + 1
+        return acc
+    }, {} as Record<string, number>)
+    const [maxDate, maxCount] = Object.entries(eventCountsByDate)
+        .reduce(([maxD, maxC], [date, count]) =>
+                count > maxC ? [date, count] : [maxD, maxC],
+            ['', 0])
+
+    if(maxCount > 1) {
+        toast.add({
+            detail: `There are ${maxCount} events in ${dayjs(maxDate).format('dddd')}`,
+            life: 2000,
+            severity: "error"
+
+        });
+        return;
+    }
+
+    console.log(events);
 }
 
 </script>
 
 <template>
+
     <Head title="Create a Schedule" />
+    <ConfirmDialog />
     <AuthLayout header-title="Create Schedule" >
         <section class="flex flex-col p-8 ">
             <div class="flex justify-end w-full gap-3">
+
                 <Button
                     label="Reset"
                     severity="danger"
