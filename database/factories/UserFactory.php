@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Admin;
 use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -58,6 +59,21 @@ class UserFactory extends Factory
             });
     }
 
+    public function withAdmin(array $attributes = []): static
+    {
+        return $this->state(fn (array $attributes) => [
+                'role' => User::ROLE_ADMIN,
+            ])
+            ->afterMaking(function (User $user) use ($attributes) {
+                $admin = Admin::factory()->make($attributes);
+                $user->setRelation('admin', $admin);
+            })
+            ->afterCreating(function (User $user) use ($attributes) {
+                $admin = Admin::factory()->create($attributes);
+                $user->admin_id = $admin->id;
+                $user->save();
+            });
+    }
 
 
 }

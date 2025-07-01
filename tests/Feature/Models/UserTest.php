@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Admin;
 use App\Models\User;
 
 test('with patient does not auto create a patient', function () {
@@ -29,5 +30,14 @@ test('user getDashboardLink works', function () {
         route('patient.dashboard'),
         $user->getDashboardLink(),
     );
+});
 
+
+test('user admin has admin property', function () {
+    $user = User::factory()->withAdmin()->create();
+    expect($user->is_admin)->toBeTrue()
+        ->and($user->admin)
+        ->toBeInstanceOf(Admin::class)
+        ->not()
+        ->toBeNull();
 });

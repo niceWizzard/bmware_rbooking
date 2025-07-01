@@ -59,6 +59,10 @@ class User extends Authenticatable
         return $this->belongsTo(Patient::class,  'patient_id');
     }
 
+    public function admin() : BelongsTo {
+        return $this->belongsTo(Admin::class,  'admin_id');
+    }
+
     public function isPatient(): Attribute
     {
         return Attribute::get(fn () => $this->role === self::ROLE_PATIENT);
