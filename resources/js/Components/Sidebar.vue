@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import {ref} from "vue";
     import Button from 'primevue/button'
-    import OverlayPanel from 'primevue/overlaypanel'
+    import Popover from 'primevue/popover'
     import {router, usePage} from "@inertiajs/vue3";
 
     const {props} = usePage();
@@ -48,7 +48,7 @@
                 @click="toggle"
                 aria-haspopup="true"
             />
-            <OverlayPanel ref="overlayRef">
+            <Popover ref="overlayRef">
                 <ul class="flex flex-col gap-2 min-w-[160px]">
                     <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer pl-6" >
                         Profile
@@ -63,7 +63,7 @@
                         Log out
                     </button>
                 </ul>
-            </OverlayPanel>
+            </Popover>
         </div>
 
     </aside>
