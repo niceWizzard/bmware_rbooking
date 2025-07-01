@@ -30,6 +30,10 @@ test('user getDashboardLink works', function () {
         route('patient.dashboard'),
         $user->getDashboardLink(),
     );
+
+    expect(
+        User::factory()->withAdmin()->create()->getDashboardLink(),
+    )->toEqual(route('admin.dashboard'));
 });
 
 
