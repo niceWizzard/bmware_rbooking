@@ -4,7 +4,7 @@
     import Button from "primevue/button";
     import InputText from "primevue/inputtext";
     import FloatLabel from "primevue/floatlabel";
-
+    import Input from '@/Components/Input.vue'
   defineProps<{}>();
   const form = useForm({
       email: '',
@@ -28,50 +28,49 @@
       <form @submit.prevent="form.post(route('register'))"
             class="w-96 flex flex-col gap-4 ">
           <div class="flex gap-2">
-              <div class="flex flex-col gap-1">
-                  <FloatLabel variant="on" class="w-full" >
-                      <InputText class="w-full" id="first_name" v-model="form.first_name"  />
-                      <label for="first_name">First Name</label>
-                  </FloatLabel>
-                  <p class="text-sm font-light text-red-500" v-if="form.errors.first_name">{{form.errors.first_name}}</p>
-              </div>
-              <div class="flex flex-col gap-1">
-                  <FloatLabel variant="on" class="w-full" >
-                      <InputText class="w-full" id="last_name" v-model="form.last_name"  />
-                      <label for="last_name">Last Name</label>
-                  </FloatLabel>
-                  <p class="text-sm font-light text-red-500" v-if="form.errors.last_name">{{form.errors.last_name}}</p>
-              </div>
+              <Input
+                id="first_name"
+                label="First Name"
+                :error="form.errors.first_name"
+                v-model="form.first_name"
+                type="text"
+              />
+              <Input
+                  id="last_name"
+                  label="Last Name"
+                  :error="form.errors.last_name"
+                  v-model="form.last_name"
+                  type="text"
+              />
           </div>
-          <div class="flex flex-col gap-1">
-              <FloatLabel variant="on" class="w-full" >
-                  <InputText class="w-full" id="email" v-model="form.email" type="email"  />
-                  <label for="email">Email</label>
-              </FloatLabel>
-              <p class="text-sm font-light text-red-500" v-if="form.errors.email">{{form.errors.email}}</p>
-          </div>
-          <div class="flex flex-col gap-1">
-              <FloatLabel variant="on" class="w-full" >
-                  <InputText class="w-full" id="mobile" v-model="form.mobile" type="text"  />
-                  <label for="mobile">Mobile Number</label>
-              </FloatLabel>
-              <p class="text-sm font-light text-red-500" v-if="form.errors.mobile">{{form.errors.mobile}}</p>
-          </div>
-
-          <div class="flex flex-col gap-1">
-              <FloatLabel variant="on" class="w-full" >
-                  <InputText class="w-full" id="password" v-model="form.password"  type="password" />
-                  <label for="password">Password</label>
-              </FloatLabel>
-              <p class="text-sm font-light text-red-500" v-if="form.errors.password">{{form.errors.password}}</p>
-          </div>
-          <div class="flex flex-col gap-1">
-              <FloatLabel variant="on" class="w-full" >
-                  <InputText class="w-full" id="password_confirmation" v-model="form.password_confirmation"  type="password" />
-                  <label for="password_confirmation">Password Confirmation</label>
-              </FloatLabel>
-              <p class="text-sm font-light text-red-500" v-if="form.errors.password">{{form.errors.password}}</p>
-          </div>
+          <Input
+              id="email"
+              label="Email Address"
+              :error="form.errors.email"
+              v-model="form.email"
+              type="email"
+          />
+          <Input
+              id="mobile"
+              label="Mobile Number"
+              :error="form.errors.mobile"
+              v-model="form.mobile"
+              type="text"
+          />
+          <Input
+              id="password"
+              label="Password"
+              :error="form.errors.password"
+              v-model="form.password"
+              type="password"
+          />
+          <Input
+              id="password_confirmation"
+              label="Confirm your Password"
+              :error="form.errors.password_confirmation"
+              v-model="form.password_confirmation"
+              type="password"
+          />
           <Button type="submit" :disabled="form.processing">Continue</Button>
           <p class=" font-light text-center">
               Already have an account? <a :href="route('login')" class="font-medium text-primary">
