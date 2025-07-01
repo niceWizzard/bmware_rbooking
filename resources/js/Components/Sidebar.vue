@@ -2,16 +2,19 @@
     import {ref} from "vue";
     import Button from 'primevue/button'
     import OverlayPanel from 'primevue/overlaypanel'
-    import {router} from "@inertiajs/vue3";
-    const navLinks = [
+    import {router, usePage} from "@inertiajs/vue3";
+
+    const {props} = usePage();
+    const navLinks = props.auth.user!.role === 'patient' ? [
         {
             text: 'Dashboard',
             link: route('patient.dashboard'),
         },
+    ] : [
         {
             text: 'Dashboard',
-            link: route('patient.dashboard'),
-        },
+            link: route('admin.dashboard'),
+        }
     ];
     const overlayRef = ref()
 
