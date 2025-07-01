@@ -28,3 +28,26 @@ test('appointment end happens on the same day as appointment date', function () 
     );
 });
 
+test('appointment number is auto set', function () {
+    $appointment = Appointment::factory()->withPatient()->create();
+
+    expect($appointment->appointment_number)
+        ->not()
+        ->toBeNull()
+        ->and(
+            Appointment
+                ::whereAppointmentNumber($appointment->appointment_number)
+                ->count()
+        )->toBeOne();
+});
+
+test('appointment number is somewhat unique', function () {
+    $appointments = Appointment::factory(100)->withPatient()->create();
+    foreach ($appointments as $appointment) {
+        expect(
+            Appointment
+                ::whereAppointmentNumber($appointment->appointment_number)
+                ->count()
+        )->toBeOne();
+    }
+});
