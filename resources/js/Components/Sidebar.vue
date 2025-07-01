@@ -2,7 +2,7 @@
     import {ref} from "vue";
     import Button from 'primevue/button'
     import Popover from 'primevue/popover'
-    import {router, usePage, Link} from "@inertiajs/vue3";
+    import {router, usePage} from "@inertiajs/vue3";
 
     const {props} = usePage();
     const navLinks = props.auth.user!.role === 'patient' ? [

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import CardLayout from '@/Layouts/CardLayout.vue'
-    import {Head, useForm, Link} from '@inertiajs/vue3'
+    import {Head, useForm} from '@inertiajs/vue3'
     import Button from "primevue/button";
     import InputText from "primevue/inputtext";
     import FloatLabel from "primevue/floatlabel";
