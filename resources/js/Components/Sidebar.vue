@@ -2,7 +2,7 @@
     import {ref} from "vue";
     import Button from 'primevue/button'
     import Popover from 'primevue/popover'
-    import {router, usePage} from "@inertiajs/vue3";
+    import {router, usePage, Link} from "@inertiajs/vue3";
 
     const {props} = usePage();
     const navLinks = props.auth.user!.role === 'patient' ? [
@@ -16,6 +16,8 @@
             link: route('admin.dashboard'),
         }
     ];
+
+
     const overlayRef = ref()
 
     function toggle(event: Event) {
@@ -32,13 +34,13 @@
             Booking
         </h3>
         <nav class="flex flex-col w-full flex-1 mt-8">
-            <a
+            <Link
                 v-for="link in navLinks"
                 :href="link.link"
                 class="px-3 py-2 hover:bg-green-600 w-full text-center text-white"
             >
                 {{link.text}}
-            </a>
+            </Link>
         </nav>
         <div class="flex flex-col p-3">
             <Button

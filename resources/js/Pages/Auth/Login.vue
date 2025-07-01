@@ -3,7 +3,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import FloatLabel from 'primevue/floatlabel'
 import CardLayout from '@/Layouts/CardLayout.vue'
-import {Head, useForm} from "@inertiajs/vue3";
+import {Head, useForm, Link} from "@inertiajs/vue3";
 import Input from '@/Components/Input.vue'
 
 const form = useForm({
@@ -45,7 +45,7 @@ function onFormSubmit() {
 
             <Button type="submit" :disabled="form.processing">Login</Button>
             <p class=" font-light text-center">
-                Don't have an account? <a :href="route('register')" class="font-medium text-primary">Register</a>
+                Don't have an account? <Link :href="route('register')" class="font-medium text-primary">Register</Link>
             </p>
         </form>
     </CardLayout>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import CardLayout from '@/Layouts/CardLayout.vue'
-    import {Head, useForm} from '@inertiajs/vue3'
+    import {Head, useForm, Link} from '@inertiajs/vue3'
     import Button from "primevue/button";
     import InputText from "primevue/inputtext";
     import FloatLabel from "primevue/floatlabel";
@@ -73,9 +73,10 @@
           />
           <Button type="submit" :disabled="form.processing">Continue</Button>
           <p class=" font-light text-center">
-              Already have an account? <a :href="route('login')" class="font-medium text-primary">
+              Already have an account?
+              <Link :href="route('login')" class="font-medium text-primary">
               Login
-              </a>
+              </Link>
           </p>
       </form>
   </CardLayout>
