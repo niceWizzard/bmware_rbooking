@@ -1,12 +1,17 @@
 <?php
 
+use App\Models\Admin;
 use App\Models\User;
 
 test('admin model has user property', function () {
-    $user = User::factory()->withAdmin()->create();
+    $admin = Admin::factory()->create();
+    $user = User::factory()->create([
+        'admin_id' => $admin->id
+    ]);
     expect($user->admin->user)
         ->toBeInstanceOf(User::class)
-        ->toEqual($user->id, $user->admin->user->id)
         ->not()
-        ->toBeNull();
+        ->toBeNull()
+        ->and($user->id)
+        ->toEqual($user->admin->user->id);
 });
