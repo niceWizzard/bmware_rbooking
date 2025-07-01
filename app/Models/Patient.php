@@ -44,7 +44,7 @@ class Patient extends Model
         'others',
     ];
 
-    public function user() : BelongsTo {
-        return $this->belongsTo(User::class, 'patient_id', 'id');
+    public function user() : HasOne {
+        return $this->hasOne(User::class, 'patient_id', 'id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -54,8 +55,8 @@ class User extends Authenticatable
         ];
     }
 
-    public function patient(): HasOne {
-        return $this->hasOne(Patient::class, 'id', 'patient_id');
+    public function patient(): BelongsTo {
+        return $this->belongsTo(Patient::class,  'patient_id');
     }
 
     public function isPatient(): Attribute
