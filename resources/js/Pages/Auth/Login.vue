@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import FloatLabel from 'primevue/floatlabel'
 import CardLayout from '@/Layouts/CardLayout.vue'
 import {Head, useForm} from "@inertiajs/vue3";
 import Input from '@/Components/Input.vue'

@@ -2,8 +2,6 @@
     import CardLayout from '@/Layouts/CardLayout.vue'
     import {Head, useForm} from '@inertiajs/vue3'
     import Button from "primevue/button";
-    import InputText from "primevue/inputtext";
-    import FloatLabel from "primevue/floatlabel";
     import Input from '@/Components/Input.vue'
   defineProps<{}>();
   const form = useForm({
