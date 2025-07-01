@@ -32,6 +32,10 @@
         "vue-tsc": "^2.0.24"
     },
     "dependencies": {
+        "@fullcalendar/core": "^6.1.18",
+        "@fullcalendar/interaction": "^6.1.18",
+        "@fullcalendar/timegrid": "^6.1.18",
+        "@fullcalendar/vue3": "^6.1.18",
         "@primevue/themes": "^4.3.5",
         "primeicons": "^7.0.0",
         "primevue": "^4.3.5",
