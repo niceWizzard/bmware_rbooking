@@ -9,21 +9,18 @@
 </script>
 
 <template>
-   <AuthLayout>
-       Dashboard
-       <div v-if="user">
-           <p >
-               {{user}}
+   <AuthLayout header-title="Dashboard">
+       <div class="p-8">
+           <div v-if="user">
+               <p >
+                   {{user}}
 
+               </p>
+           </div>
+           <p v-else>
+               NO USER
            </p>
-           <Button @click="router.post(route('logout'))">
-               Logout
-           </Button>
        </div>
-       <p v-else>
-           NO USER
-       </p>
-
    </AuthLayout>
 </template>
 
