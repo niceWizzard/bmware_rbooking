@@ -28,6 +28,7 @@ class DoctorScheduleFactory extends Factory
             'day' => $this->faker->randomElement(DayOfWeek::cases()),
             'break_start' => $break ? Carbon::createFromTime(...explode(':', $this->faker->time()))->toTimeString() : null,
             'break_end' => $break ? Carbon::createFromTime(...explode(':', $this->faker->time()))->addHour()->toTimeString() : null,
+            'clinic' => $this->faker->randomElement(['Alphamed Diagnostics - San Fernando', 'Greencity Medical Center'])
         ];
     }
 

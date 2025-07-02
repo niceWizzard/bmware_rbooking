@@ -11,6 +11,7 @@ test('doctor should have schedule',  function () {
         'doctor_id' => $doctor->id,
         'start' => now(),
         'end' => now()->addHours(2),
+        'clinic' => 'Alphamed Diagnostics - San Fernando'
     ]);
 
     $doctor->refresh();

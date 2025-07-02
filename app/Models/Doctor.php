@@ -12,6 +12,12 @@ class Doctor extends Model
     /** @use HasFactory<\Database\Factories\DoctorFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'specialty',
+        'code',
+    ];
+
     public function schedules() : HasMany {
         return $this->hasMany(DoctorSchedule::class, 'doctor_id');
     }

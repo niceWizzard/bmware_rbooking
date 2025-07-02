@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 
 test('doctor should have schedule',  function () {
     $doctor = Doctor::factory()->create();
-    $schedule = DoctorSchedule::create([
+    $schedule = DoctorSchedule::factory()->create([
         'day' => DayOfWeek::Monday,
         'doctor_id' => $doctor->id,
         'start' => now(),

@@ -20,7 +20,6 @@ class DoctorFactory extends Factory
         return [
             'name' => $name,
             'code' => self::generateCodeFromName($name),
-            'clinic' => $this->faker->randomElement(['Alpha Med', 'Mt. Carmel']),
             'specialty' => $this->faker->randomElement(['Neurologist', 'Cardiologist', 'Pediatrician']),
         ];
     }

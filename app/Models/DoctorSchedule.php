@@ -20,6 +20,7 @@ class DoctorSchedule extends Model
         'day',
         'break_start',
         'break_end',
+        'clinic',
     ];
 
     protected $casts = [

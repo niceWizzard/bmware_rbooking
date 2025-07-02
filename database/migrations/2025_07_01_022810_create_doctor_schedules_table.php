@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('end');
             $table->time('break_start')->nullable()->default(null);
             $table->time('break_end')->nullable()->default(null);
+            $table->string('clinic');
             $table->timestamps();
         });
     }
