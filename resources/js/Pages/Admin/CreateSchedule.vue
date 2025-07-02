@@ -6,12 +6,13 @@ import {Head, router, usePage} from "@inertiajs/vue3";
 import FullCalendar from '@fullcalendar/vue3';
 import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import {CalendarOptions, EventApi, EventClickArg} from '@fullcalendar/core'
+import {CalendarOptions, DateSpanApi, EventApi, EventClickArg} from '@fullcalendar/core'
 import dayjs from "dayjs";
 import {useConfirm, useToast} from "primevue";
 import {Doctor} from "@/types";
 import ScheduleEditDialog from "@/Components/Schedule/ScheduleEditDialog.vue";
 import {ref, watchEffect} from "vue";
+import {EventImpl} from "@fullcalendar/core/internal";
 
 
 const calendarRef = ref<any>();
@@ -53,6 +54,26 @@ const calendarOptions : CalendarOptions = {
     stickyHeaderDates: true,
     eventClick(info: EventClickArg){
         selectedEvent.value = info.event;
+    },
+    eventResize: function (info) {
+        if (info.event.start?.getDate() !== info.event.end?.getDate()) {
+            toast.add({
+                severity: "warn",
+                detail: "Invalid end time",
+                life: 2000,
+            });
+            info.revert();
+        }
+    },
+    eventDrop(info) {
+        if (info.event.start?.getDate() !== info.event.end?.getDate()) {
+            toast.add({
+                severity: "warn",
+                detail: "Invalid end time",
+                life: 2000,
+            });
+            info.revert();
+        }
     },
     dateClick(info: DateClickArg) {
         selectedEvent.value = info.view.calendar.addEvent({

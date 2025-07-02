@@ -105,12 +105,15 @@ const isInvalidData = computed(() => !data.clinic || dayjs(data.start).isSame(da
                     time-only
                     v-model="data.start"
                     :step-minute="60"
+                    hour-format="12"
+
                 />
                 <label for="clinic" class="font-semibold w-24">End</label>
                 <DatePicker
                     time-only
                     v-model="data.end"
                     :step-minute="60"
+                    hour-format="12"
                 />
             </div>
 
