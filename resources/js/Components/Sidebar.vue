@@ -18,7 +18,7 @@
             link: route('admin.dashboard'),
         },{
             text: 'Doctors',
-            link: route('doctors.list'),
+            link: route('doctor.list'),
         }
     ];
 

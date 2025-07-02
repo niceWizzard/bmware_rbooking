@@ -7,8 +7,9 @@
     import {Link, router} from "@inertiajs/vue3";
 
     defineProps<{
-        doctors:  Doctor[]
+        doctors:  Doctor[],
     }>()
+
 </script>
 
 <template>
@@ -16,10 +17,11 @@
         <section class="p-8">
             <div class="flex w-full justify-between">
                 <h3 class="font-bold text-lg">Doctors</h3>
-                <Link :href="route('doctors.create')" class="bg-green-500 px-3 py-2 rounded-md text-white"
+                <Link :href="route('doctor.create')" class="bg-green-500 px-3 py-2 rounded-md text-white"
                 >Create</Link>
             </div>
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4"
+            >
                 <Card class="w-96"
                     v-for="doctor of doctors" :key="doctor.id"
                 >
@@ -31,6 +33,7 @@
                         </div>
                     </template>
                 </Card>
+                <p class="text-gray-600 text-sm" v-if="doctors.length === 0">No Doctors yet...</p>
             </div>
 
         </section>

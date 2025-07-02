@@ -13,7 +13,7 @@ const form = useForm({
 });
 
 function onSubmit() {
-    form.post(route('doctors.create'));
+    form.post(route('doctor.create'));
 }
 
 </script>

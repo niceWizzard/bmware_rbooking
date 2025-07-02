@@ -16,8 +16,8 @@ Route::prefix('/admin')
     });
 
 Route::middleware('auth')
-    ->prefix('/doctors')
-    ->name('doctors')
+    ->prefix('/admin/doctors')
+    ->name('doctor')
     ->group(static function () {
 
     Route::post('/create', static function (Request $request) {
@@ -33,12 +33,12 @@ Route::middleware('auth')
 
     Route::get('/create', static function () {
         Auth::user()->load('admin');
-        return Inertia::render('DoctorCreate');
+        return Inertia::render('Admin/Doctor/DoctorCreate');
     })->name('.create');
 
     Route::get('/', static function () {
         Auth::user()->load('admin');
-        return Inertia::render('DoctorList', [
+        return Inertia::render('Admin/Doctor/DoctorList', [
             'doctors' => Doctor::all()
         ]);
     })->name('.list');
