@@ -26,6 +26,14 @@ export interface Doctor {
     specialty: string;
 }
 
+export interface Schedule {
+    id: number;
+    clinic: string;
+    start: string;
+    end: string;
+    day: number;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {

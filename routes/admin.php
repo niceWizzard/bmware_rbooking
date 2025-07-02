@@ -51,4 +51,5 @@ Route::middleware(['auth'])
 ->group(static function () {
     Route::get('/create', 'create')->name('.create');
     Route::post('/create', 'store');
+    Route::get('/', 'view')->name('.view');
 });

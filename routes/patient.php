@@ -3,7 +3,8 @@ use Inertia\Inertia;
 
 
 Route::prefix('/patient')
-    ->middleware(['auth'])->name('patient')->group(function () {
+    ->middleware(['auth'])
+    ->name('patient')->group(function () {
 
     Route::get('/dashboard', static function () {
         Auth::user()->load('patient');

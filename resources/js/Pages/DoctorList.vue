@@ -4,7 +4,7 @@
     import Card from 'primevue/card';
     import Button from 'primevue/button';
     import {Doctor} from "@/types";
-    import { Link } from "@inertiajs/vue3";
+    import {Link, router} from "@inertiajs/vue3";
 
     defineProps<{
         doctors:  Doctor[]
@@ -20,15 +20,14 @@
                 >Create</Link>
             </div>
             <div class="flex flex-wrap gap-4">
-                <Card style="width: 25rem; overflow: hidden"
+                <Card class="w-96"
                     v-for="doctor of doctors" :key="doctor.id"
                 >
-                    <template #title>{{doctor.name}}</template>
-                    <template #subtitle>{{doctor.specialty}}</template>
-                    <template #footer>
-                        <div class="flex gap-4 mt-1">
-                            <Button label="Cancel" severity="secondary" outlined class="w-full" />
-                            <Button label="Save" class="w-full" />
+                    <template #title>Dr. {{doctor.name}}</template>
+                    <template #subtitle>Expertise: {{doctor.specialty}}</template>
+                    <template #content>
+                        <div class="flex gap-4">
+                            <Button label="See Schedule" @click="router.visit(route('schedule.view', doctor.id))" />
                         </div>
                     </template>
                 </Card>
