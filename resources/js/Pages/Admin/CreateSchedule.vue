@@ -76,6 +76,15 @@ const calendarOptions : CalendarOptions = {
         }
     },
     dateClick(info: DateClickArg) {
+        const events = info.view.calendar.getEvents();
+        if(events.some(e => e.start?.getDate() === info.date.getDate())) {
+            toast.add({
+                severity: "warn",
+                detail: "Cannot be more than two schedule at one day.",
+                life: 2000,
+            });
+            return;
+        }
         selectedEvent.value = info.view.calendar.addEvent({
             title: "Schedule",
             start: info.date,
