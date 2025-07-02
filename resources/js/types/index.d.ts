@@ -19,6 +19,13 @@ export type User = {
     }
 }
 
+export interface Doctor {
+    id: number;
+    name: string;
+    code: string;
+    specialty: string;
+}
+
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
