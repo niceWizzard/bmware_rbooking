@@ -56,6 +56,7 @@ const calendarOptions: CalendarOptions = {
     timeZone: "utc",
     height: '24rem',
     headerToolbar: false,
+    stickyHeaderDates: true,
 }
 
 </script>

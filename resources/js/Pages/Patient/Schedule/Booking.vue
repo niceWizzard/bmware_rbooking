@@ -31,6 +31,7 @@
         dayHeaderFormat: { weekday: 'long' },
         height: '100vh',
         events: props.slots,
+        stickyHeaderDates: true,
     }
 
 </script>
