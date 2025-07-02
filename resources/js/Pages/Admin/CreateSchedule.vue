@@ -2,19 +2,39 @@
 import AuthLayout from "@/Layouts/AuthLayout.vue";
 import Button from 'primevue/button'
 import ConfirmDialog from 'primevue/confirmdialog'
-import { Head } from "@inertiajs/vue3";
+import {Head, router, usePage} from "@inertiajs/vue3";
 import FullCalendar from '@fullcalendar/vue3';
-import interactionPlugin, {Draggable} from '@fullcalendar/interaction';
+import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import {CalendarOptions, EventApi} from '@fullcalendar/core'
-import {onMounted, ref} from "vue";
+import {CalendarOptions, EventApi, EventClickArg} from '@fullcalendar/core'
 import dayjs from "dayjs";
 import {useConfirm, useToast} from "primevue";
+import {Doctor} from "@/types";
+import ScheduleEditDialog from "@/Components/Schedule/ScheduleEditDialog.vue";
+import {ref, watchEffect} from "vue";
 
 
 const calendarRef = ref<any>();
 const toast = useToast();
 const confirmPopup = useConfirm();
+
+const props = defineProps<{
+    doctor: Doctor,
+}>();
+
+
+watchEffect(() => {
+    const {props: pageProps} = usePage();
+    if (pageProps.flash?.message) {
+        toast.add({
+            severity: "error",
+            summary: "Error",
+            detail: pageProps.flash.message,
+        });
+    }
+});
+
+const selectedEvent = ref<EventApi|null>(null);
 
 const calendarOptions : CalendarOptions = {
     plugins: [timeGridPlugin, interactionPlugin],
@@ -27,48 +47,21 @@ const calendarOptions : CalendarOptions = {
     height: '100vh',
     dayHeaderFormat: { weekday: 'long' },
     headerToolbar: false,
-    droppable: true,
     editable: true,
-    eventClick(info: any){
-        confirmPopup.require({
-            message: 'Do you want to remove this event?',
-            icon: 'pi pi-exclamation-triangle',
-            rejectProps: {
-                label: 'Cancel',
-                severity: 'secondary',
-                outlined: true
-            },
-            acceptProps: {
-                label: 'Remove',
-                severity: 'danger',
-            },
-            accept: () => {
-                info.event.remove();
-            },
-        })
+    droppable: true,
+    expandRows: true,
+    eventClick(info: EventClickArg){
+        selectedEvent.value = info.event;
     },
-    dateClick(info: any) {
-        info.view.calendar.addEvent({
+    dateClick(info: DateClickArg) {
+        selectedEvent.value = info.view.calendar.addEvent({
             title: "Schedule",
             start: info.date,
             allDay: info.allDay
-        })
+        });
     },
 };
 
-onMounted(() => {
-    const containerEl = document.getElementById('external-events');
-    if (containerEl) {
-        new Draggable(containerEl, {
-            itemSelector: '.fc-event',
-            eventData: function(eventEl) {
-                return {
-                    title: eventEl.innerText.trim()
-                };
-            }
-        });
-    }
-});
 
 function resetButtonClick(event: MouseEvent) {
     confirmPopup.require({
@@ -97,8 +90,10 @@ function finishButtonClicked() {
     const events = eventsFromCalendar.map(e => ({
         id: e.id,
         title: e.title,
-        start: e.start,
-        end: e.end
+        start: dayjs(e.start).format('YYYY-MM-DDTHH:mm:ss'), // no Z suffix
+        end: dayjs(e.end).format('YYYY-MM-DDTHH:mm:ss'),
+        clinic: e.extendedProps.clinic,
+        day: dayjs(e.start).day()
     }))
     if(events.length === 0){
         toast.add({
@@ -123,24 +118,42 @@ function finishButtonClicked() {
             detail: `There are ${maxCount} events in ${dayjs(maxDate).format('dddd')}`,
             life: 2000,
             severity: "error"
-
         });
         return;
     }
 
-    console.log(events);
+    let safe = true;
+    for (const event of events) {
+        if(!event.clinic) {
+            safe = false;
+            toast.add({
+                detail: `Please add a clinic in ${dayjs(event.start).format('dddd')}`,
+                life: 2000,
+                severity: "error"
+            });
+            break;
+        }
+    }
+
+    if(!safe)
+        return;
+
+
+    router.post(route('schedule.create', props.doctor.id), {events});
 }
+
+
 
 </script>
 
 <template>
-
     <Head title="Create a Schedule" />
     <ConfirmDialog />
+    <ScheduleEditDialog v-model="selectedEvent" />
     <AuthLayout header-title="Create Schedule" >
         <section class="flex flex-col p-8 ">
+            <h3 class="text-lg">Dr. {{doctor.name}}</h3>
             <div class="flex justify-end w-full gap-3">
-
                 <Button
                     label="Reset"
                     severity="danger"
@@ -151,24 +164,13 @@ function finishButtonClicked() {
                     @click="finishButtonClicked"
                 />
             </div>
-            <div class="flex">
-                <div id="external-events" class="w-1/5 p-4 border-r">
-                    <p class="mb-2 font-bold">Drag Schedule</p>
-                    <div class="fc-event p-2 bg-blue-500 text-white mb-2 rounded cursor-pointer">Schedule</div>
-                    <p class="font-light text-sm mt-8">
-                        Drag the Blue Schedule to the calendar to add a schedule to that day.
-                    </p>
-                    <p class="font-light text-sm mt-2">
-                        Click on an event in the calendar to remove it.
-                    </p>
-                </div>
-
-                <!-- FullCalendar -->
-                <div class="flex-1 p-4">
-                    <FullCalendar ref="calendarRef" :options="calendarOptions" />
-                </div>
+            <div class="flex-1 p-4">
+                <FullCalendar ref="calendarRef" :options="calendarOptions" />
             </div>
         </section>
     </AuthLayout>
 </template>
 
+<style scoped>
+
+</style>

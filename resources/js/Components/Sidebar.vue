@@ -16,6 +16,9 @@
         {
             text: 'Dashboard',
             link: route('admin.dashboard'),
+        },{
+            text: 'Doctors',
+            link: route('doctors.list'),
         }
     ];
 

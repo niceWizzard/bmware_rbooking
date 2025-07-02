@@ -19,7 +19,7 @@ class Doctor extends Model
     ];
 
     public function schedules() : HasMany {
-        return $this->hasMany(DoctorSchedule::class, 'doctor_id');
+        return $this->hasMany(DoctorSchedule::class, 'doctor_id', 'id');
     }
 
 
