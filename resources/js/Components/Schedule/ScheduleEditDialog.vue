@@ -5,15 +5,16 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import DatePicker from "primevue/datepicker";
 import {EventApi} from "@fullcalendar/core";
-import {computed, reactive, watchEffect} from "vue";
+import {computed, reactive, watch, watchEffect} from "vue";
 import dayjs from "dayjs";
 
 const selectedEvent = defineModel<EventApi | null>();
 
+const now = dayjs().minute(0).second(0);
 const data = reactive({
     clinic : '',
-    start: new Date(),
-    end: new Date(),
+    start:  now.toDate(),
+    end: now.add(1, "h").toDate(),
 })
 
 const visible = computed({
@@ -23,24 +24,41 @@ const visible = computed({
     }
 });
 
-watchEffect(() => {
-   if(selectedEvent.value) {
-       data.clinic = selectedEvent.value.extendedProps.clinic ?? "";
-       data.start = selectedEvent.value.start ?? new Date();
-       data.end = selectedEvent.value.end ?? dayjs(data.start).add(1, 'hour').toDate();
-   }
-});
-watchEffect(() => {
-    if (dayjs(data.start).isAfter(dayjs(data.end))) {
-        data.end = new Date(data.start); // sync end with start
+watch(selectedEvent, (event) => {
+    if (event) {
+        data.clinic = event.extendedProps.clinic ?? "";
+        data.start = event.start ? new Date(event.start) : new Date();
+        data.end = event.end ? new Date(event.end) : dayjs(data.start).add(1, "hour").toDate();
     }
 });
 
+
+watchEffect(() => {
+    const start = dayjs(data.start);
+    const end = dayjs(data.end);
+
+    const startMinutes = start.hour() * 60 + start.minute();
+    const endMinutes = end.hour() * 60 + end.minute();
+
+    if (startMinutes >= endMinutes) {
+        // If start is greater than or equal to end, shift end forward by 1 hour
+        data.end = start.add(1, 'hour').toDate();
+    }
+});
+
+
+
+
 function save() {
     if(selectedEvent.value) {
+        const eventDay = dayjs(selectedEvent.value.start);
         selectedEvent.value.setExtendedProp('clinic', data.clinic);
-        selectedEvent.value.setStart(data.start);
-        selectedEvent.value.setEnd(data.end);
+        selectedEvent.value.setStart(
+            eventDay.hour(dayjs(data.start).hour()).toDate(),
+        );
+        selectedEvent.value.setEnd(
+            eventDay.hour(dayjs(data.end).hour()).toDate(),
+        );
     }
     visible.value = false;
 }
@@ -51,6 +69,8 @@ function removeEvent() {
         visible.value = false;
     }
 }
+
+const isInvalidData = computed(() => !data.clinic || dayjs(data.start).isSame(data.end));
 
 </script>
 
@@ -98,7 +118,7 @@ function removeEvent() {
                 <Button type="button" severity="danger" label="Remove" @click="removeEvent" />
                 <Button type="button" label="Cancel" severity="secondary" @click="visible = false" />
                 <Button type="submit" label="Save"
-                        :disabled="!data.clinic"
+                        :disabled="isInvalidData"
                 />
             </div>
         </form>
