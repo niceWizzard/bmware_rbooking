@@ -51,6 +51,7 @@ const calendarOptions : CalendarOptions = {
     editable: true,
     droppable: true,
     expandRows: true,
+    eventOverlap: false,
     stickyHeaderDates: true,
     eventClick(info: EventClickArg){
         selectedEvent.value = info.event;
