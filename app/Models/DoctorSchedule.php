@@ -6,6 +6,7 @@ use App\Enums\DayOfWeek;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class DoctorSchedule extends Model
 {
@@ -33,6 +34,30 @@ class DoctorSchedule extends Model
 
     public function doctor(): BelongsTo {
         return $this->belongsTo(Doctor::class, 'doctor_id', 'id');
+    }
+
+    public function availableSlotsAt(Carbon $date, ?User $user = null): array
+    {
+        if (!$this->start || !$this->end) {
+            return [];
+        }
+
+        $availableTime = [];
+
+        // Parse times as Carbon objects on the given date
+        $start = $this->start->setDateFrom($date);
+//        $breakStart = $this->break_time_start ? $this->break_time_start->setDateFrom($date) : null;
+//        $breakEnd = $this->break_time_end ? $this->break_time_end->setDateFrom($date) : null;
+        $end = $this->end->setDateFrom($date);
+
+        // 1-hour slots before break
+        $current = $start->copy();
+        while ($current < $end) {
+            $availableTime[] = $current->copy();
+            $current->addHour();
+        }
+
+        return $availableTime;
     }
 
 

@@ -13,7 +13,8 @@
 
     const props = withDefaults(defineProps<{
         invalid: boolean,
-        doctor?: Doctor
+        doctor?: Doctor,
+        slots: any
     }>(), {
         invalid: false
     });
@@ -28,9 +29,8 @@
         slotDuration: '00:60:00',
         expandRows: true,
         dayHeaderFormat: { weekday: 'long' },
-        timeZone: "utc",
         height: '100vh',
-        headerToolbar: false,
+        events: props.slots,
     }
 
 </script>
