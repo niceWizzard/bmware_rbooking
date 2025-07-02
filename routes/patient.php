@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Patient\PatientBookingController;
 use Inertia\Inertia;
 
 
@@ -10,5 +12,12 @@ Route::prefix('/patient')
         Auth::user()->load('patient');
         return Inertia::render('Patient/Dashboard');
     })->name('.dashboard');
+
+    Route::controller(PatientBookingController::class)->group(function () {
+        Route::get('/doctors', 'showDoctorList')->name('.doctors');
+
+        Route::get('/book', 'showBooking')->name('.book');
+    });
+
 
 });

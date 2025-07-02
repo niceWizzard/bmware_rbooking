@@ -24,7 +24,7 @@ function onFormSubmit() {
             </h3>
         </template>
         <form @submit.prevent="onFormSubmit"
-              class="w-96 flex flex-col gap-4 ">
+              class="w-96 flex flex-col gap-4">
             <Input
                 :error="form.errors.email"
                 id="email"

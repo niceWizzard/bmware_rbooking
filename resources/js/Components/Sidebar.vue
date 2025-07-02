@@ -12,6 +12,11 @@
             text: 'Dashboard',
             link: route('patient.dashboard'),
         },
+        {
+            text: "Doctors",
+            link: route('patient.doctors'),
+        }
+
     ] : [
         {
             text: 'Dashboard',
