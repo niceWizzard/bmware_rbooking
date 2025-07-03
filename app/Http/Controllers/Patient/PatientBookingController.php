@@ -43,7 +43,6 @@ class PatientBookingController extends Controller
             ]);
         }
         Cookie::queue(Cookie::make('doctorCode', $doctor->code, 24 * 60 * 7));
-
         return Inertia::render('Patient/Schedule/Booking', [
             'invalid' => false,
             'doctor' => $doctor,
@@ -69,6 +68,7 @@ class PatientBookingController extends Controller
                     'end' => $slot->copy()->addHour()->toDateTimeString(),
                     'type' => 'free',
                     'clinic' => $schedule?->clinic ?? 'NULL',
+                    'doctor' => $doctor->name,
                     'id' =>  $slot->toDateTimeString(),
                 ];
             }

@@ -2,10 +2,11 @@
     import {Doctor} from "@/types";
     import AuthLayout from "@/Layouts/AuthLayout.vue";
     import FullCalendar from "@fullcalendar/vue3";
-    import {CalendarOptions} from "@fullcalendar/core";
+    import {CalendarOptions, EventApi} from "@fullcalendar/core";
     import timeGridPlugin from "@fullcalendar/timegrid";
     import {Link, Head} from "@inertiajs/vue3";
-
+    import {ref} from "vue";
+    import BookSlotDialog from "@/Components/Schedule/BookSlotDialog.vue";
 
 
     const props = withDefaults(defineProps<{
@@ -15,6 +16,8 @@
     }>(), {
         invalid: false
     });
+
+    const bookSlotDialogRef = ref<InstanceType<typeof BookSlotDialog>>();
 
     const calendarOptions: CalendarOptions = {
         plugins: [timeGridPlugin],
@@ -29,13 +32,22 @@
         events: props.slots,
         stickyHeaderDates: true,
         firstDay: (new Date()).getDay(),
+        eventClick (info) {
+            bookSlotDialogRef.value?.setSlot(info.event);
+        },
     }
+
+    function onSubmit(slot : EventApi) {
+
+    }
+
+
 </script>
 
 <template>
     <Head title="Book an Appointment" />
     <AuthLayout header-title="Booking" >
-
+        <BookSlotDialog :on-submit="onSubmit" ref="bookSlotDialogRef"/>
         <section class="p-8 flex flex-col gap-4 " v-if="!invalid">
             <div class="flex justify-between">
                 <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>
