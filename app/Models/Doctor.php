@@ -24,7 +24,7 @@ class Doctor extends Model
     }
 
     /**
-     * @return Carbon[]  Array of available slots
+     * @return array{Carbon[], DoctorSchedule|null}  Array of available slots and current schedule
      */
     public function availableSlotsAt(Carbon $date, User $user): array
     {
@@ -32,10 +32,9 @@ class Doctor extends Model
             ->where('day',$date->dayOfWeek)
             ->first();
         if (!$scheduleDay) {
-            return [];
+            return [[], null];
         }
-
-        return $scheduleDay->availableSlotsAt($date, $user);
+        return [$scheduleDay->availableSlotsAt($date, $user), $scheduleDay];
     }
 
 }

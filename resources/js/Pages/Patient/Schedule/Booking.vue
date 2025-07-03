@@ -4,11 +4,9 @@
     import FullCalendar from "@fullcalendar/vue3";
     import {CalendarOptions} from "@fullcalendar/core";
     import timeGridPlugin from "@fullcalendar/timegrid";
-    import {Link} from "@inertiajs/vue3";
+    import {Link, Head} from "@inertiajs/vue3";
 
-    type BookingProps =
-        | { invalid: true }
-        | { invalid: false, doctor: Doctor }
+
 
     const props = withDefaults(defineProps<{
         invalid: boolean,
@@ -17,7 +15,6 @@
     }>(), {
         invalid: false
     });
-
 
     const calendarOptions: CalendarOptions = {
         plugins: [timeGridPlugin],
@@ -33,11 +30,12 @@
         stickyHeaderDates: true,
         firstDay: (new Date()).getDay(),
     }
-
 </script>
 
 <template>
+    <Head title="Book an Appointment" />
     <AuthLayout header-title="Booking" >
+
         <section class="p-8 flex flex-col gap-4 " v-if="!invalid">
             <div class="flex justify-between">
                 <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>

@@ -61,13 +61,15 @@ class PatientBookingController extends Controller
         // Loop through the next 13 days (excluding today)
         for ($i = 1; $i < 15; $i++) {
             $date = $today->copy()->addDays($i); // avoid mutating $today
-            $slots = $doctor->availableSlotsAt($date, $user);
+            [$slots, $schedule] = $doctor->availableSlotsAt($date, $user);
             foreach ($slots as $slot) {
                 $availableSlots[] = [
                     'title' => 'Available',
                     'start' => $slot->toDateTimeString(),
                     'end' => $slot->copy()->addHour()->toDateTimeString(),
                     'type' => 'free',
+                    'clinic' => $schedule?->clinic ?? 'NULL',
+                    'id' =>  $slot->toDateTimeString(),
                 ];
             }
         }
