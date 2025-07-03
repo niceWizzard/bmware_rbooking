@@ -19,7 +19,7 @@ class PatientBookingController extends Controller
 {
     public function showDoctorList(Request $request): Response
     {
-        $doctors = Doctor::all();
+        $doctors = Doctor::has('schedules')->get();
 
         return Inertia::render('Patient/Schedule/DoctorList', [
             'doctors' => $doctors,
