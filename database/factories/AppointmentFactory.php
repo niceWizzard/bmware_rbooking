@@ -19,7 +19,7 @@ class AppointmentFactory extends Factory
 
         return [
             'clinic' => $this->faker->randomElement(['Dental', 'General Medicine', 'Pediatrics']),
-            'appointment_for' => $this->faker->name,
+            'appointment_for' => 'In-Patient',
             'appointment_date' => $date,
             'appointment_start' => $startTime,
             'appointment_end' => $endTime,
