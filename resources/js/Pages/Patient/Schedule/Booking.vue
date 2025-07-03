@@ -32,6 +32,7 @@
         height: '100vh',
         events: props.slots,
         stickyHeaderDates: true,
+        firstDay: (new Date()).getDay(),
     }
 
 </script>
