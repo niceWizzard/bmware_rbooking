@@ -2,15 +2,19 @@
     import {Doctor} from "@/types";
     import CardLayout from "@/Layouts/CardLayout.vue";
     import Card from 'primevue/card'
-    import {Link} from "@inertiajs/vue3";
-    defineProps<{
+    import {Link, usePage} from "@inertiajs/vue3";
+    const props = defineProps<{
         doctors: Doctor[];
     }>()
+    const {props: {auth}} = usePage();
 </script>
 
 <template>
     <CardLayout class="w-full">
         <template #header>
+            <div class="flex gap-2 justify-end" v-if="!auth.user">
+                <Link :href="route('login')" class=" font-light text-sm px-3 py-2 rounded-md">Login</Link>
+            </div>
             <h3 class="text-2xl font-bold text-center">
                 Doctors
             </h3>
