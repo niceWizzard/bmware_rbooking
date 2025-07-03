@@ -49,4 +49,23 @@ class Doctor extends Model
         return array_values(array_diff([0, 1, 2, 3, 4, 5, 6], $schedules));
     }
 
+    /**
+     * Returns the earliest and latest time for the schedule
+     * @return array{string,string}
+     */
+    public function getScheduleTimeRange() : array {
+        $minTime = now()->setTime(23,0);
+        $maxTime = now()->setTime(0, 0);
+        foreach ($this->schedules as $schedule) {
+            if($schedule->start->hour < $minTime->hour) {
+                $minTime = $schedule->start->copy();
+            }
+            if($schedule->end->hour > $maxTime->hour) {
+                $maxTime = $schedule->end->copy();
+            }
+        }
+
+        return [$minTime->toTimeString(), $maxTime->toTimeString()];
+    }
+
 }

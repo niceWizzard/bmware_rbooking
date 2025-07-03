@@ -18,6 +18,7 @@
         doctor?: Doctor,
         slots: any,
         hiddenDays: number[],
+        timeRange: [string, string],
     }>(), {
         invalid: false
     });
@@ -39,6 +40,8 @@
         firstDay: (new Date()).getDay(),
         timeZone: 'utc',
         hiddenDays:  props.hiddenDays,
+        slotMinTime: props.timeRange[0],
+        slotMaxTime: props.timeRange[1],
         eventClick (info) {
             bookSlotDialogRef.value?.setSlot(info.event);
         },
