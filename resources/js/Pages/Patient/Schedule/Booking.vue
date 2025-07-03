@@ -81,6 +81,32 @@
         });
     }
 
+
+    async function onDelete(slot: EventApi, setIsLoading: (value: boolean) => void) {
+        try {
+            const res = await axios.delete(route('patient.appointment', slot.id));
+            if(res.data.succes) {
+                throw new Error(res.data.message);
+            }
+            toast.add({
+                severity: 'success',
+                summary: 'Cancelled successfully',
+                life: 3000,
+            })
+            bookSlotDialogRef.value?.setSlot(null);
+        } catch(e) {
+            const err = e as Error;
+            toast.add({
+                severity: 'error',
+                summary: 'Something went wrong while cancelling the appointment',
+                detail: err.message,
+                life: 3000,
+            })
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     const {pause: pausePoll, resume: resumePoll } = useIntervalFn(() => {
         const calendar = calendarRef.value?.getApi();
         calendar?.refetchEvents();
@@ -132,7 +158,7 @@
 <template>
     <Head title="Book an Appointment" />
     <AuthLayout header-title="Booking" >
-        <BookSlotDialog :doctor="doctor" :on-submit="onSubmit" ref="bookSlotDialogRef"/>
+        <BookSlotDialog  :doctor="doctor" :on-submit="onSubmit" :on-delete="onDelete" ref="bookSlotDialogRef"/>
         <section class="p-8 flex flex-col gap-4 " v-if="!invalid">
             <div class="flex justify-between">
                 <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>

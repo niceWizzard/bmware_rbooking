@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Patient\PatientBookingController;
 use Inertia\Inertia;
 
@@ -15,9 +16,13 @@ Route::prefix('/patient')
 
         Route::get('/book', 'showBooking')->name('.book');
         Route::post('/book', 'bookAppointment');
+    });
 
-
-
+    Route::controller(AppointmentController::class)
+        ->prefix('/appointment/{id}')
+        ->name('.appointment')
+        ->group(function () {
+            Route::delete('/', 'delete');
     });
 
 

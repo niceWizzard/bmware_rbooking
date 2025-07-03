@@ -18,15 +18,16 @@ const visible = computed({
     }
 });
 
-const {onSubmit} = defineProps<{
+const {onSubmit, onDelete} = defineProps<{
     onSubmit: (slot: EventApi, setIsLoading: (v: boolean) => void,) => void,
+    onDelete: (slot: EventApi, setIsLoading: (v: boolean) => void,) => void,
     doctor : Doctor,
 }>()
 
 defineExpose({
     setSlot(e : EventApi|null){
         selectedSlot.value = e;
-    }
+    },
 });
 
 const time = computed(() => {
@@ -39,6 +40,11 @@ function submit() {
     onSubmit(selectedSlot.value!, (v) => isLoading.value = v);
 }
 
+function onCancel() {
+    isLoading.value = true;
+    onDelete(selectedSlot.value!, (v) => isLoading.value = v);
+}
+
 
 </script>
 
@@ -48,7 +54,7 @@ function submit() {
         modal
         header="Book"
         :style="{ width: '25rem' }"
-        dismissable-mask
+        :dismissable-mask="!isLoading"
     >
         <form
             @submit.prevent="submit"
@@ -119,9 +125,9 @@ function submit() {
                 />
             </div>
             <div class="flex flex-col gap-2">
-                <label for="time">Booked at</label>
+                <label for="booked_at">Booked at</label>
                 <InputText
-                    id="time"
+                    id="booked_at"
                     readonly
                     :value="dayjs(selectedSlot?.extendedProps.booked_at).format('YYYY-MM-DD (dddd) hh:mm a')"
                 />
@@ -138,6 +144,8 @@ function submit() {
                 label="Cancel"
                 icon="pi pi-trash"
                 severity="danger"
+                :loading="isLoading"
+                @click="onCancel"
             />
         </div>
     </Dialog>
