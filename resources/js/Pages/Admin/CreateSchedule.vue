@@ -3,21 +3,18 @@ import AuthLayout from "@/Layouts/AuthLayout.vue";
 import Button from 'primevue/button'
 import ConfirmDialog from 'primevue/confirmdialog'
 import {Head, router, usePage} from "@inertiajs/vue3";
-import FullCalendar from '@fullcalendar/vue3';
-import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import {CalendarOptions, DateSpanApi, EventApi, EventClickArg} from '@fullcalendar/core'
+import {EventApi} from '@fullcalendar/core'
 import dayjs from "dayjs";
 import {useConfirm, useToast} from "primevue";
 import {Doctor} from "@/types";
-import ScheduleEditDialog from "@/Components/Schedule/ScheduleEditDialog.vue";
 import {ref, watchEffect} from "vue";
-import {EventImpl} from "@fullcalendar/core/internal";
+import ScheduleCalendarCreator from "@/Components/Schedule/ScheduleCalendarCreator.vue";
 
 
-const calendarRef = ref<any>();
 const toast = useToast();
 const confirmPopup = useConfirm();
+
+const calendarRef = ref<InstanceType<typeof ScheduleCalendarCreator>>();
 
 const props = defineProps<{
     doctor: Doctor,
@@ -35,83 +32,6 @@ watchEffect(() => {
     }
 });
 
-const selectedEvent = ref<EventApi|null>(null);
-
-const calendarOptions : CalendarOptions = {
-    plugins: [timeGridPlugin, interactionPlugin],
-    initialView: 'timeGridWeek',
-    allDaySlot: false,
-    nowIndicator: false,
-    stickyFooterScrollbar: true,
-    dragScroll: true,
-    slotDuration: '00:60:00',
-    height: '100vh',
-    dayHeaderFormat: { weekday: 'long' },
-    headerToolbar: false,
-    editable: true,
-    droppable: true,
-    expandRows: true,
-    eventOverlap: false,
-    stickyHeaderDates: true,
-    eventClick(info: EventClickArg){
-        selectedEvent.value = info.event;
-    },
-    eventResize: function (info) {
-        if (info.event.start?.getDate() !== info.event.end?.getDate()) {
-            toast.add({
-                severity: "warn",
-                detail: "Invalid end time",
-                life: 2000,
-            });
-            info.revert();
-        }
-    },
-    eventDrop(info) {
-        if (info.event.start?.getDate() !== info.event.end?.getDate()) {
-            toast.add({
-                severity: "warn",
-                detail: "Invalid end time",
-                life: 2000,
-            });
-            info.revert();
-            return;
-        }
-        const events = info.view.calendar.getEvents();
-        const hasConflict = events.some(event => {
-            return (
-                event.id !== info.event.id && // skip the moved event
-                event.start &&
-                event.start.getDate() === info.event.start?.getDate()
-            );
-        });
-
-        if(hasConflict) {
-            toast.add({
-                severity: "warn",
-                detail: "Cannot have more than two schedule per day",
-                life: 2000,
-            });
-            info.revert();
-        }
-    },
-    dateClick(info: DateClickArg) {
-        const events = info.view.calendar.getEvents();
-        if(events.some(e => e.start?.getDate() === info.date.getDate())) {
-            toast.add({
-                severity: "warn",
-                detail: "Cannot be more than two schedule at one day.",
-                life: 2000,
-            });
-            return;
-        }
-        selectedEvent.value = info.view.calendar.addEvent({
-            title: "Schedule",
-            start: info.date,
-            allDay: info.allDay,
-            id: (new Date()).toString(),
-        });
-    },
-};
 
 
 function resetButtonClick(event: MouseEvent) {
@@ -128,16 +48,14 @@ function resetButtonClick(event: MouseEvent) {
             severity: 'danger',
         },
         accept: () => {
-            const calendarApi = calendarRef.value.getApi()
-            calendarApi?.removeAllEvents();
+            calendarRef.value?.resetCalendar();
         },
     })
 
 }
 
 function finishButtonClicked() {
-    const calendarApi = calendarRef.value.getApi()
-    const eventsFromCalendar: EventApi[] = calendarApi.getEvents()
+    const eventsFromCalendar = calendarRef.value!.getCalendarEvents();
     const events = eventsFromCalendar.map(e => ({
         id: e.id,
         title: e.title,
@@ -189,10 +107,8 @@ function finishButtonClicked() {
     if(!safe)
         return;
 
-
     router.post(route('schedule.create', props.doctor.id), {events});
 }
-
 
 
 </script>
@@ -200,7 +116,6 @@ function finishButtonClicked() {
 <template>
     <Head title="Create a Schedule" />
     <ConfirmDialog />
-    <ScheduleEditDialog v-model="selectedEvent" />
     <AuthLayout header-title="Create Schedule" >
         <section class="flex flex-col p-8 ">
             <h3 class="text-lg">Dr. {{doctor.name}}</h3>
@@ -216,7 +131,7 @@ function finishButtonClicked() {
                 />
             </div>
             <div class="flex-1 p-4">
-                <FullCalendar ref="calendarRef" :options="calendarOptions" />
+                <ScheduleCalendarCreator :toast="toast" ref="calendarRef" />
             </div>
         </section>
     </AuthLayout>
