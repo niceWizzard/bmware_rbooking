@@ -16,7 +16,8 @@
     const props = withDefaults(defineProps<{
         invalid: boolean,
         doctor?: Doctor,
-        slots: any
+        slots: any,
+        hiddenDays: number[],
     }>(), {
         invalid: false
     });
@@ -37,6 +38,7 @@
         stickyHeaderDates: true,
         firstDay: (new Date()).getDay(),
         timeZone: 'utc',
+        hiddenDays:  props.hiddenDays,
         eventClick (info) {
             bookSlotDialogRef.value?.setSlot(info.event);
         },

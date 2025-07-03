@@ -37,4 +37,16 @@ class Doctor extends Model
         return [$scheduleDay->availableSlotsAt($date, $user), $scheduleDay];
     }
 
+    /**
+     * Returns the days (int) where there are no schedule
+     * @return array{int}
+     */
+    public function getDaysOff(): array {
+        $schedules = $this->schedules->map(function(DoctorSchedule $schedule) {
+            return $schedule->day->value;
+        })->values()->toArray();
+
+        return array_values(array_diff([0, 1, 2, 3, 4, 5, 6], $schedules));
+    }
+
 }

@@ -49,7 +49,8 @@ class PatientBookingController extends Controller
         return Inertia::render('Patient/Schedule/Booking', [
             'invalid' => false,
             'doctor' => $doctor,
-            'slots' => self::getAvailableSlots($doctor, \Auth::user())
+            'slots' => self::getAvailableSlots($doctor, \Auth::user()),
+            'hiddenDays' => $doctor->getDaysOff(),
         ]);
     }
 
