@@ -60,6 +60,6 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->intended(route('patient.dashboard'));
+        return redirect()->intended(route('patient.book'));
     }
 }

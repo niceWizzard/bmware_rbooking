@@ -9,8 +9,8 @@
     const {user} = props.auth;
     const navLinks = user!.role === 'patient' ? [
         {
-            text: 'Dashboard',
-            link: route('patient.dashboard'),
+            text: 'Book',
+            link: route('patient.book'),
         },
         {
             text: "Doctors",

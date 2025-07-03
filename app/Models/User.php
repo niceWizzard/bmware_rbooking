@@ -76,7 +76,7 @@ class User extends Authenticatable
 
     public function getDashboardLink() : string {
         return match ($this->role) {
-            default => route('patient.dashboard'),
+            default => route('patient.book'),
             self::ROLE_ADMIN => route('admin.dashboard'),
         };
     }
