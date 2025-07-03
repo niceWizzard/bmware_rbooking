@@ -6,7 +6,7 @@ use Inertia\Inertia;
 
 
 Route::prefix('/patient')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'only.patient'])
     ->name('patient')->group(function () {
 
     Route::controller(PatientBookingController::class)->group(function () {

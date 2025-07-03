@@ -7,7 +7,7 @@ use Inertia\Inertia;
 
 Route::prefix('/admin')
     ->name('admin')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'only.admin'])
     ->group(static function () {
         Route::get('/dashboard', static function () {
             Auth::user()->load('admin');
@@ -15,7 +15,7 @@ Route::prefix('/admin')
         })->name('.dashboard');
     });
 
-Route::middleware('auth')
+Route::middleware(['auth', 'only.admin'])
     ->prefix('/admin/doctors')
     ->name('doctor')
     ->group(static function () {
@@ -44,7 +44,7 @@ Route::middleware('auth')
     })->name('.list');
 });
 
-Route::middleware(['auth'])
+Route::middleware(['auth','only.admin'])
 ->prefix('/schedule/{id}')
 ->name('schedule')
 ->controller(DoctorScheduleController::class)
