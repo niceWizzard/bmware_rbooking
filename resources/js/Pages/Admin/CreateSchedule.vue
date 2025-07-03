@@ -74,6 +74,24 @@ const calendarOptions : CalendarOptions = {
                 life: 2000,
             });
             info.revert();
+            return;
+        }
+        const events = info.view.calendar.getEvents();
+        const hasConflict = events.some(event => {
+            return (
+                event.id !== info.event.id && // skip the moved event
+                event.start &&
+                event.start.getDate() === info.event.start?.getDate()
+            );
+        });
+
+        if(hasConflict) {
+            toast.add({
+                severity: "warn",
+                detail: "Cannot have more than two schedule per day",
+                life: 2000,
+            });
+            info.revert();
         }
     },
     dateClick(info: DateClickArg) {
@@ -89,7 +107,8 @@ const calendarOptions : CalendarOptions = {
         selectedEvent.value = info.view.calendar.addEvent({
             title: "Schedule",
             start: info.date,
-            allDay: info.allDay
+            allDay: info.allDay,
+            id: (new Date()).toString(),
         });
     },
 };
