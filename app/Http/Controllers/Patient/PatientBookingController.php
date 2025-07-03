@@ -9,10 +9,10 @@ use App\Models\Doctor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 use Inertia\Response;
-use function Termwind\parse;
 
 class PatientBookingController extends Controller
 {
@@ -74,6 +74,16 @@ class PatientBookingController extends Controller
             return \response()->json([
                 'success' => false,
                 'message' => 'Invalid date. Must be in UTC format.',
+            ]);
+        }
+
+        if(
+            Appointment::isDoctorBookedAt($doctor, $date) ||
+            Appointment::isPatientBookedAt(Auth::user()->patient, $date)
+        ) {
+            return \response()->json([
+                'success' => false,
+                'message' => 'Doctor/Patient already booked this date.',
             ]);
         }
 
