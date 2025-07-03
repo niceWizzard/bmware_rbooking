@@ -37,6 +37,7 @@
         "@fullcalendar/timegrid": "^6.1.18",
         "@fullcalendar/vue3": "^6.1.18",
         "@primevue/themes": "^4.3.5",
+        "@vueuse/core": "^13.5.0",
         "dayjs": "^1.11.13",
         "primeicons": "^7.0.0",
         "primevue": "^4.3.5",

@@ -25,7 +25,7 @@ class PatientBookingController extends Controller
         ]);
     }
 
-    public function showBooking(Request $request): Response
+    public function showBooking(Request $request)
     {
         $code = $request->query('code');
         \Auth::user()->load('patient');
@@ -34,16 +34,12 @@ class PatientBookingController extends Controller
             $code = Cookie::get('doctorCode');
         }
         if(is_null($code)) {
-            return Inertia::render('Patient/Schedule/Booking', [
-                'invalid' => true,
-            ]);
+            return redirect(route('patient.doctors'));
         }
         $doctor = Doctor::whereCode($code)->first();
 
         if(is_null($doctor)) {
-            return Inertia::render('Patient/Schedule/Booking', [
-                'invalid' => true,
-            ]);
+            return redirect(route('patient.doctors'));
         }
         Cookie::queue(Cookie::make('doctorCode', $doctor->code, 24 * 60 * 7));
         return Inertia::render('Patient/Schedule/Booking', [
@@ -56,6 +52,36 @@ class PatientBookingController extends Controller
                 now()->toDateString(),
                 now()->addDays(15)->toDateString(),
             ],
+        ]);
+    }
+
+    public function fetchBookingSlots(Request $request) {
+        $code = $request->query('code');
+
+        if(is_null($code)) {
+            $code = Cookie::get('doctorCode');
+        }
+        if(is_null($code)) {
+            return \response()->json([
+                'success' => false,
+                'message' => 'Please provide a doctor code.',
+            ]);
+        }
+        $doctor = Doctor::whereCode($code)->first();
+        $user = Auth::user();
+
+        $user->load('patient');
+
+        if(is_null($doctor)) {
+            return \response()->json([
+                'success' => false,
+                'message' => 'Invalid doctor code given.',
+            ]);
+        }
+
+        return \response()->json([
+            'success' => true,
+            'slots' => self::getAvailableSlots($doctor, $user),
         ]);
     }
 

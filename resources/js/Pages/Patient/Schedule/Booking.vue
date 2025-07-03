@@ -5,26 +5,26 @@
     import {CalendarOptions, EventApi} from "@fullcalendar/core";
     import timeGridPlugin from "@fullcalendar/timegrid";
     import {Link, Head} from "@inertiajs/vue3";
-    import {ref} from "vue";
+    import {onMounted, ref} from "vue";
     import BookSlotDialog from "@/Components/Schedule/BookSlotDialog.vue";
     import axios from "axios";
     import {useToast} from "primevue";
     import Toast from 'primevue/toast';
     import dayjs from "dayjs";
+    import {useIntervalFn} from "@vueuse/core";
 
     const toast = useToast();
-    const props = withDefaults(defineProps<{
+    const props = defineProps<{
         invalid: boolean,
         doctor?: Doctor,
         slots: any,
         hiddenDays: number[],
         timeRange: [string, string],
         dateRange: [string, string],
-    }>(), {
-        invalid: false
-    });
+    }>();
 
     const bookSlotDialogRef = ref<InstanceType<typeof BookSlotDialog>>();
+    const calendarRef = ref<InstanceType<typeof FullCalendar>>();
 
     const calendarOptions: CalendarOptions = {
         plugins: [timeGridPlugin],
@@ -36,7 +36,6 @@
         expandRows: true,
         dayHeaderFormat: { weekday: 'long' },
         height: '100vh',
-        events: props.slots,
         stickyHeaderDates: true,
         firstDay: (new Date()).getDay(),
         timeZone: 'utc',
@@ -50,6 +49,13 @@
         eventClick (info) {
             bookSlotDialogRef.value?.setSlot(info.event);
         },
+
+        eventSources: [
+            {
+              id: 'initial',
+              events: props.slots,
+            }
+        ]
     }
 
     function onSubmit(slot : EventApi, setIsLoading: (value: boolean) => void) {
@@ -76,6 +82,51 @@
         });
     }
 
+    const {pause: pausePoll, resume: resumePoll } = useIntervalFn(() => {
+        const calendar = calendarRef.value?.getApi();
+        calendar?.refetchEvents();
+    }, 2000)
+
+    onMounted(() => {
+        const calendar = calendarRef.value?.getApi();
+        if (!calendar) return;
+
+        // Remove the initial event source
+        const removeInitialSource = () => {
+            const initialSource = calendar.getEventSourceById('initial');
+            if (initialSource) {
+                initialSource.remove();
+            }
+        }
+
+        setTimeout(() => {
+            let haveRemoved = false;
+            calendar.addEventSource({
+                id: 'dynamic',
+                async events(info: any, successCb: Function, failureCb: Function) {
+                    try {
+                        const res = await axios.get(route('patient.book.fetch', { code: props.doctor!.code }));
+                        if (!res.data.success) throw new Error(res.data.message);
+                        if(!haveRemoved) {
+                            haveRemoved = true;
+                            removeInitialSource();
+                        }
+                        successCb(res.data.slots);
+                    } catch (error: unknown) {
+                        const err = error as Error;
+                        toast.add({
+                            severity: 'error',
+                            summary: 'An error occurred while fetching bookings',
+                            detail: err.message,
+                        });
+                        pausePoll();
+                        failureCb(err);
+                    }
+                }
+            });
+        }, 2000); // Reduced delay for better responsiveness
+    });
+
 
 </script>
 
@@ -94,20 +145,8 @@
                 </div>
             </div>
             <div class="flex-1 ">
-                <FullCalendar  :options="calendarOptions" />
+                <FullCalendar  ref="calendarRef" :options="calendarOptions" />
             </div>
-        </section>
-        <section class="w-full flex flex-col gap-4 p-8 items-center" v-else>
-            <p class="text-center text-2xl">
-                Invalid Doctor
-            </p>
-            <Link :href="route('patient.doctors')"
-                class="px-4 py-2 text-white bg-green-600 rounded-md"
-            >See Doctor's List</Link>
         </section>
     </AuthLayout>
 </template>
-
-<style scoped>
-
-</style>

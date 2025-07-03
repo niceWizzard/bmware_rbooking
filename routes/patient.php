@@ -11,8 +11,13 @@ Route::prefix('/patient')
     Route::controller(PatientBookingController::class)->group(function () {
         Route::get('/doctors', 'showDoctorList')->name('.doctors');
 
+        Route::get('/book/refetch', 'fetchBookingSlots')->name('.book.fetch');
+
         Route::get('/book', 'showBooking')->name('.book');
         Route::post('/book', 'bookAppointment');
+
+
+
     });
 
 
