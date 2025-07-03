@@ -58,6 +58,7 @@
                 summary: 'Booked successfully',
                 life: 3000,
             })
+            bookSlotDialogRef.value?.setSlot(null);
         }).finally(() => {
             setIsLoading(false);
         });
