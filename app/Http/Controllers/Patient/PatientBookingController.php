@@ -52,6 +52,10 @@ class PatientBookingController extends Controller
             'slots' => self::getAvailableSlots($doctor, \Auth::user()),
             'hiddenDays' => $doctor->getDaysOff(),
             'timeRange' => $doctor->getScheduleTimeRange(),
+            'dateRange' => [
+                now()->toDateString(),
+                now()->addDays(15)->toDateString(),
+            ],
         ]);
     }
 

@@ -19,6 +19,7 @@
         slots: any,
         hiddenDays: number[],
         timeRange: [string, string],
+        dateRange: [string, string],
     }>(), {
         invalid: false
     });
@@ -42,6 +43,10 @@
         hiddenDays:  props.hiddenDays,
         slotMinTime: props.timeRange[0],
         slotMaxTime: props.timeRange[1],
+        validRange: {
+            start: props.dateRange[0],
+            end: props.dateRange[1],
+        },
         eventClick (info) {
             bookSlotDialogRef.value?.setSlot(info.event);
         },
