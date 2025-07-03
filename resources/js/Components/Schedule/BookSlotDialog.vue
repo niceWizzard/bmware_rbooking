@@ -28,8 +28,8 @@ defineExpose({
 });
 
 const time = computed(() => {
-    return dayjs(selectedSlot.value?.start).format('YYYY-MM-DD (dddd) h a') +
-        dayjs(selectedSlot.value?.end).format(' to h a');
+    return dayjs.utc(selectedSlot.value?.start).format('YYYY-MM-DD (dddd) h a') +
+        dayjs.utc(selectedSlot.value?.end).format(' to h a');
 })
 
 function submit() {

@@ -53,6 +53,13 @@ class DoctorSchedule extends Model
         // 1-hour slots before break
         $current = $start->copy();
         while ($current < $end) {
+            if(
+                Appointment::isPatientBookedAt($user->patient, $current) ||
+                Appointment::isDoctorBookedAt($this->doctor, $current)
+            ) {
+                $current->addHour();
+                continue;
+            }
             $availableTime[] = $current->copy();
             $current->addHour();
         }

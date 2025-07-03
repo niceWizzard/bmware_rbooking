@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 class Appointment extends Model
 {
@@ -45,6 +46,21 @@ class Appointment extends Model
 
     public function details() : HasOne {
         return $this->hasOne(AppointmentDetails::class, 'appointment_id', 'id');
+    }
+
+    public static function isPatientBookedAt(Patient $patient, Carbon $date) : bool {
+        return self::where('patient_id', $patient->id)
+            ->where('appointment_date', $date->toDateString())
+            ->where('appointment_start', $date->toTimeString())
+            ->exists();
+    }
+
+    public static function isDoctorBookedAt(Doctor $doctor, Carbon $date) : bool {
+        return self::whereDate('appointment_date', $date)
+            ->whereTime('appointment_start', $date)
+            ->whereHas('details', function ($query) use ($doctor) {
+                $query->where('doctor_id', $doctor->id);
+            })->exists();
     }
 
     public static function booted(): void

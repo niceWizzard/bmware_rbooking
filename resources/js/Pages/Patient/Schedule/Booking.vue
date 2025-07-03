@@ -10,6 +10,7 @@
     import axios from "axios";
     import {useToast} from "primevue";
     import Toast from 'primevue/toast';
+    import dayjs from "dayjs";
 
     const toast = useToast();
     const props = withDefaults(defineProps<{
@@ -35,6 +36,7 @@
         events: props.slots,
         stickyHeaderDates: true,
         firstDay: (new Date()).getDay(),
+        timeZone: 'utc',
         eventClick (info) {
             bookSlotDialogRef.value?.setSlot(info.event);
         },
@@ -42,7 +44,7 @@
 
     function onSubmit(slot : EventApi, setIsLoading: (value: boolean) => void) {
         axios.post(route('patient.book'), {
-            date: slot.start,
+            date: dayjs.utc(slot.start).utc().format('YYYY-MM-DD HH:mm:ss'),
             code: props.doctor!.code,
         }).then(response => {
             if(!response.data.success) {

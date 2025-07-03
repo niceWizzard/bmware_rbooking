@@ -67,15 +67,20 @@ class PatientBookingController extends Controller
             ]);
         }
 
-
-
         $date = Carbon::parse($data['date']);
+
+        if($date->getTimezone()->getName() !== 'UTC') {
+            return \response()->json([
+                'success' => false,
+                'message' => 'Invalid date. Must be in UTC format.',
+            ]);
+        }
 
         $schedule = $doctor->schedules()->where('day',$date->dayOfWeek)->first();
         if(is_null($schedule)) {
             return \response()->json([
                 'success' => false,
-                'message' => 'Schedule not found',
+                'message' => 'Schedule not found' . $date->toString(),
             ]);
         }
 
@@ -84,7 +89,7 @@ class PatientBookingController extends Controller
             'patient_id' => \Auth::user()->patient_id,
             'appointment_start' => $date->toTimeString(),
             'appointment_date' => $date->toDateString(),
-            'appointment_end' => $date->addHour()->toTimeString(),
+            'appointment_end' => $date->copy()->addHour()->toTimeString(),
             'appointment_for' => 'In-Patient',
         ]);
 
