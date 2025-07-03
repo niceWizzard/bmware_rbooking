@@ -4,7 +4,6 @@
     import FullCalendar from "@fullcalendar/vue3";
     import {CalendarOptions} from "@fullcalendar/core";
     import timeGridPlugin from "@fullcalendar/timegrid";
-    import {computed} from "vue";
     import {Link} from "@inertiajs/vue3";
 
     type BookingProps =
@@ -39,9 +38,17 @@
 
 <template>
     <AuthLayout header-title="Booking" >
-        <section class="p-8 flex flex-col" v-if="!invalid">
-            <h3 class="text-lg font-medium"> Dr. {{doctor!.name}}</h3>
-            <div class="flex-1 p-4">
+        <section class="p-8 flex flex-col gap-4 " v-if="!invalid">
+            <div class="flex justify-between">
+                <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>
+                <div class="flex gap-4">
+                    <Link :href="route('patient.doctors')"
+                          class="px-3 py-2 rounded-md bg-green-600 text-white flex items-center gap-3" >
+                        <i class="pi pi-arrow-right-arrow-left"></i>
+                        Change Doctors</Link>
+                </div>
+            </div>
+            <div class="flex-1 ">
                 <FullCalendar  :options="calendarOptions" />
             </div>
         </section>
