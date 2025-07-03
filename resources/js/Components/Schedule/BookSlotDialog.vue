@@ -6,6 +6,7 @@ import Button from 'primevue/button'
 import {computed, ref} from "vue";
 import {EventApi} from "@fullcalendar/core";
 import dayjs from "dayjs";
+import {Doctor} from "@/types";
 
 
 const selectedSlot = ref<EventApi|null>(null);
@@ -19,6 +20,7 @@ const visible = computed({
 
 const {onSubmit} = defineProps<{
     onSubmit: (slot: EventApi, setIsLoading: (v: boolean) => void,) => void,
+    doctor : Doctor,
 }>()
 
 defineExpose({
@@ -51,13 +53,14 @@ function submit() {
         <form
             @submit.prevent="submit"
             class="flex gap-4 flex-col"
+            v-if="selectedSlot?.extendedProps.type === 'free'"
         >
             <div class="flex flex-col gap-2">
                 <label for="doctor">Doctor</label>
                 <InputText
                     id="doctor"
                     readonly
-                    :value="selectedSlot?.extendedProps.doctor"
+                    :value="doctor.name"
                 />
             </div>
             <div class="flex flex-col gap-2">
@@ -90,5 +93,52 @@ function submit() {
                 :loading="isLoading"
             />
         </form>
+        <div class="flex flex-col gap-4" v-else>
+            <div class="flex flex-col gap-2">
+                <label for="doctor">Doctor</label>
+                <InputText
+                    id="doctor"
+                    readonly
+                    :value="doctor.name"
+                />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="clinic">Clinic</label>
+                <InputText
+                    readonly
+                    id="clinic"
+                    :value="selectedSlot?.extendedProps.clinic"
+                />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="time">Time</label>
+                <InputText
+                    id="time"
+                    readonly
+                    :value="time"
+                />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label for="time">Booked at</label>
+                <InputText
+                    id="time"
+                    readonly
+                    :value="dayjs(selectedSlot?.extendedProps.booked_at).format('YYYY-MM-DD (dddd) hh:mm a')"
+                />
+            </div>
+            <Button
+                type="button"
+                label="Close"
+                variant="text"
+                severity="secondary"
+                @click="visible = false"
+            />
+            <Button
+                type="submit"
+                label="Cancel"
+                icon="pi pi-trash"
+                severity="danger"
+            />
+        </div>
     </Dialog>
 </template>

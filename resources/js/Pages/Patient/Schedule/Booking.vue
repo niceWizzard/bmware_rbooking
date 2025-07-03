@@ -9,14 +9,13 @@
     import BookSlotDialog from "@/Components/Schedule/BookSlotDialog.vue";
     import axios from "axios";
     import {useToast} from "primevue";
-    import Toast from 'primevue/toast';
     import dayjs from "dayjs";
     import {useIntervalFn} from "@vueuse/core";
 
     const toast = useToast();
     const props = defineProps<{
         invalid: boolean,
-        doctor?: Doctor,
+        doctor: Doctor,
         slots: any,
         hiddenDays: number[],
         timeRange: [string, string],
@@ -133,7 +132,7 @@
 <template>
     <Head title="Book an Appointment" />
     <AuthLayout header-title="Booking" >
-        <BookSlotDialog :on-submit="onSubmit" ref="bookSlotDialogRef"/>
+        <BookSlotDialog :doctor="doctor" :on-submit="onSubmit" ref="bookSlotDialogRef"/>
         <section class="p-8 flex flex-col gap-4 " v-if="!invalid">
             <div class="flex justify-between">
                 <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>

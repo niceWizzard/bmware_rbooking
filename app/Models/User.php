@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -72,6 +73,18 @@ class User extends Authenticatable
     public function isAdmin(): Attribute
     {
         return Attribute::get(fn () => $this->role === self::ROLE_ADMIN);
+    }
+
+    public function getAppointmentsWith(string $doctorId): Collection|array
+    {
+        $doctor = Doctor::find($doctorId);
+        if(is_null($doctor)) {
+            return [];
+        }
+
+        return $this->patient->appointments()->whereHas('details', function($query) use($doctorId) {
+            $query->where('doctor_id', $doctorId);
+        })->get();
     }
 
     public function getDashboardLink() : string {

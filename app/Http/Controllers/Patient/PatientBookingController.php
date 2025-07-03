@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentDetails;
 use App\Models\Doctor;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -42,10 +43,13 @@ class PatientBookingController extends Controller
             return redirect(route('patient.doctors'));
         }
         Cookie::queue(Cookie::make('doctorCode', $doctor->code, 24 * 60 * 7));
+
+        $slots = $this->getBookingSlots($doctor);
+
         return Inertia::render('Patient/Schedule/Booking', [
             'invalid' => false,
             'doctor' => $doctor,
-            'slots' => self::getAvailableSlots($doctor, \Auth::user()),
+            'slots' => $slots,
             'hiddenDays' => $doctor->getDaysOff(),
             'timeRange' => $doctor->getScheduleTimeRange(),
             'dateRange' => [
@@ -79,9 +83,11 @@ class PatientBookingController extends Controller
             ]);
         }
 
+        $slots = $this->getBookingSlots($doctor);
+
         return \response()->json([
             'success' => true,
-            'slots' => self::getAvailableSlots($doctor, $user),
+            'slots' => $slots,
         ]);
     }
 
@@ -165,12 +171,34 @@ class PatientBookingController extends Controller
                     'end' => $slot->copy()->addHour()->toDateTimeString(),
                     'type' => 'free',
                     'clinic' => $schedule?->clinic ?? 'NULL',
-                    'doctor' => $doctor->name,
                     'id' =>  $slot->toDateTimeString(),
                 ];
             }
         }
         return $availableSlots;
+    }
+
+    /**
+     * @param Doctor $doctor
+     * @return array
+     */
+    public function getBookingSlots(Doctor $doctor): array
+    {
+        $slots = self::getAvailableSlots($doctor, \Auth::user());
+
+        foreach (Auth::user()->getAppointmentsWith($doctor->id) as $appointment) {
+            $slots[] = [
+                'id' => $appointment->id,
+                'start' => $appointment->appointment_start_date_time,
+                'end' => $appointment->appointment_end_date_time,
+                'color' => 'gray',
+                'title' => 'Appointment ',
+                'type' => 'booked',
+                'clinic' => $appointment->clinic,
+                'booked_at' => $appointment->created_at,
+            ];
+        }
+        return $slots;
     }
 
 }
