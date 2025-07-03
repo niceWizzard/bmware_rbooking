@@ -10,7 +10,9 @@ Route::prefix('/patient')
     ->name('patient')->group(function () {
 
     Route::controller(PatientBookingController::class)->group(function () {
-        Route::get('/doctors', 'showDoctorList')->name('.doctors');
+        Route::get('/doctors', 'showDoctorList')
+            ->withoutMiddleware(['only.patient', 'auth'])
+            ->name('.doctors');
 
         Route::get('/book/refetch', 'fetchBookingSlots')->name('.book.fetch');
 

@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', static function () {
-    return Inertia::render('Welcome');
+    if(Auth::check()) {
+        return redirect(Auth::user()->getDashboardLink());
+    }
+    return redirect(route('patient.doctors'));
 });
-
-
 
 
 require __DIR__.'/patient.php';
