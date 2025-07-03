@@ -12,6 +12,7 @@ Route::prefix('/patient')
         Route::get('/doctors', 'showDoctorList')->name('.doctors');
 
         Route::get('/book', 'showBooking')->name('.book');
+        Route::post('/book', 'bookAppointment');
     });
 
 

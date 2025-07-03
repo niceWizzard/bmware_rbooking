@@ -7,8 +7,11 @@
     import {Link, Head} from "@inertiajs/vue3";
     import {ref} from "vue";
     import BookSlotDialog from "@/Components/Schedule/BookSlotDialog.vue";
+    import axios from "axios";
+    import {useToast} from "primevue";
+    import Toast from 'primevue/toast';
 
-
+    const toast = useToast();
     const props = withDefaults(defineProps<{
         invalid: boolean,
         doctor?: Doctor,
@@ -37,8 +40,27 @@
         },
     }
 
-    function onSubmit(slot : EventApi) {
-
+    function onSubmit(slot : EventApi, setIsLoading: (value: boolean) => void) {
+        axios.post(route('patient.book'), {
+            date: slot.start,
+            code: props.doctor!.code,
+        }).then(response => {
+            if(!response.data.success) {
+                toast.add({
+                    severity: 'error',
+                    summary: response.data.message,
+                    life: 3000,
+                });
+                return;
+            }
+            toast.add({
+                severity: 'success',
+                summary: 'Booked successfully',
+                life: 3000,
+            })
+        }).finally(() => {
+            setIsLoading(false);
+        });
     }
 
 

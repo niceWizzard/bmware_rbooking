@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 
 
 const selectedSlot = ref<EventApi|null>(null);
-
+const isLoading = ref(false);
 const visible = computed({
     get: () => selectedSlot.value != null,
     set: (val: boolean) => {
@@ -18,7 +18,7 @@ const visible = computed({
 });
 
 const {onSubmit} = defineProps<{
-    onSubmit: (slot: EventApi) => void,
+    onSubmit: (slot: EventApi, setIsLoading: (v: boolean) => void,) => void,
 }>()
 
 defineExpose({
@@ -33,7 +33,8 @@ const time = computed(() => {
 })
 
 function submit() {
-    onSubmit(selectedSlot.value!);
+    isLoading.value = true;
+    onSubmit(selectedSlot.value!, (v) => isLoading.value = v);
 }
 
 
@@ -86,6 +87,7 @@ function submit() {
                 type="submit"
                 label="Book"
                 icon="pi pi-clock"
+                :loading="isLoading"
             />
         </form>
     </Dialog>

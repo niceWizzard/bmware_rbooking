@@ -10,6 +10,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Appointment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'clinic',
+        'appointment_number',
+        'patient_id',
+        'appointment_start',
+        'appointment_date',
+        'appointment_end',
+        'appointment_for',
+    ];
+
     protected $casts = [
         'appointment_date' => 'date',
         'appointment_start' => 'datetime:H:i:s',

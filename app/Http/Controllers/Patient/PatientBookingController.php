@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
+use App\Models\AppointmentDetails;
 use App\Models\Doctor;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 use Inertia\Response;
+use function Termwind\parse;
 
 class PatientBookingController extends Controller
 {
@@ -48,9 +51,56 @@ class PatientBookingController extends Controller
             'doctor' => $doctor,
             'slots' => self::getAvailableSlots($doctor, \Auth::user())
         ]);
-
-
     }
+
+    public function bookAppointment(Request $request) {
+        $data = $request->validate([
+            'date' => ['required', 'date'],
+            'code' => ['required', 'exists:booking_doctors,code'],
+        ]);
+
+        $doctor = Doctor::whereCode($data['code'])->first();
+        if(is_null($doctor)) {
+            return \response()->json([
+                'success' => false,
+                'message' => 'Doctor not found',
+            ]);
+        }
+
+
+
+        $date = Carbon::parse($data['date']);
+
+        $schedule = $doctor->schedules()->where('day',$date->dayOfWeek)->first();
+        if(is_null($schedule)) {
+            return \response()->json([
+                'success' => false,
+                'message' => 'Schedule not found',
+            ]);
+        }
+
+        $appointment = Appointment::create([
+            'clinic' => $schedule->clinic,
+            'patient_id' => \Auth::user()->patient_id,
+            'appointment_start' => $date->toTimeString(),
+            'appointment_date' => $date->toDateString(),
+            'appointment_end' => $date->addHour()->toTimeString(),
+            'appointment_for' => 'In-Patient',
+        ]);
+
+        $details = AppointmentDetails::create([
+            'appointment_id' => $appointment->id,
+            'doctor_id' => $doctor->id,
+            'patient_id' => \Auth::user()->patient_id,
+        ]);
+
+        return \response()->json([
+            'success' => true,
+            'appointment' => $appointment->id,
+        ]);
+    }
+
+
 
     private static function getAvailableSlots(Doctor $doctor, User $user): array
     {

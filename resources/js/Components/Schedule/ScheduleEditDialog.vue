@@ -7,6 +7,7 @@ import DatePicker from "primevue/datepicker";
 import {EventApi} from "@fullcalendar/core";
 import {computed, reactive, watch, watchEffect} from "vue";
 import dayjs from "dayjs";
+import axios from "axios";
 
 const selectedEvent = defineModel<EventApi | null>();
 
@@ -23,6 +24,7 @@ const visible = computed({
         if (!val) selectedEvent.value = null;
     }
 });
+
 
 watch(selectedEvent, (event) => {
     if (event) {
