@@ -32,7 +32,6 @@
         nowIndicator: false,
         stickyFooterScrollbar: true,
         slotDuration: '00:60:00',
-        expandRows: true,
         dayHeaderFormat: { weekday: 'long' },
         height: '100vh',
         stickyHeaderDates: true,
@@ -175,3 +174,12 @@
         </section>
     </AuthLayout>
 </template>
+<style >
+.fc-timegrid-slot {
+    height: 48px !important;
+}
+
+.fc-timegrid-event {
+    cursor: pointer;
+}
+</style>
