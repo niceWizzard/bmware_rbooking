@@ -24,7 +24,9 @@ Route::prefix('/patient')
         ->prefix('/appointment/{id}')
         ->name('.appointment')
         ->group(function () {
-            Route::delete('/', 'delete');
+            Route::delete('/', 'delete')->name('.delete');
+            Route::get('/change', 'showChangeTime')->name('.change');
+            Route::post('/change', 'changeTime');
     });
 
 

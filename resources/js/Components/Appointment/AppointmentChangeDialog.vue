@@ -1,13 +1,12 @@
 <script setup lang="ts">
 
+import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
-import Button from 'primevue/button'
 import {computed, ref} from "vue";
 import {EventApi} from "@fullcalendar/core";
-import dayjs from "dayjs";
 import {Doctor} from "@/types";
-import {Link, router} from "@inertiajs/vue3";
+import dayjs from "dayjs";
 
 
 const selectedSlot = ref<EventApi|null>(null);
@@ -19,9 +18,8 @@ const visible = computed({
     }
 });
 
-const {onSubmit, onDelete} = defineProps<{
+const {onSubmit, } = defineProps<{
     onSubmit: (slot: EventApi, setIsLoading: (v: boolean) => void,) => void,
-    onDelete: (slot: EventApi, setIsLoading: (v: boolean) => void,) => void,
     doctor : Doctor,
 }>()
 
@@ -31,21 +29,15 @@ defineExpose({
     },
 });
 
-const time = computed(() => {
-    return dayjs.utc(selectedSlot.value?.start).format('YYYY-MM-DD (dddd) h a') +
-        dayjs.utc(selectedSlot.value?.end).format(' to h a');
-})
-
 function submit() {
     isLoading.value = true;
     onSubmit(selectedSlot.value!, (v) => isLoading.value = v);
 }
 
-function onCancel() {
-    isLoading.value = true;
-    onDelete(selectedSlot.value!, (v) => isLoading.value = v);
-}
-
+const time = computed(() => {
+    return dayjs.utc(selectedSlot.value?.start).format('YYYY-MM-DD (dddd) h a') +
+        dayjs.utc(selectedSlot.value?.end).format(' to h a');
+})
 
 </script>
 
@@ -95,57 +87,10 @@ function onCancel() {
             />
             <Button
                 type="submit"
-                label="Book"
+                label="Set"
                 icon="pi pi-clock"
                 :loading="isLoading"
             />
         </form>
-        <div class="flex flex-col gap-4" v-else>
-            <div class="flex flex-col gap-2">
-                <label for="doctor">Doctor</label>
-                <InputText
-                    id="doctor"
-                    readonly
-                    :value="doctor.name"
-                />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="clinic">Clinic</label>
-                <InputText
-                    readonly
-                    id="clinic"
-                    :value="selectedSlot?.extendedProps.clinic"
-                />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="time">Time</label>
-                <InputText
-                    id="time"
-                    readonly
-                    :value="time"
-                />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="booked_at">Booked at</label>
-                <InputText
-                    id="booked_at"
-                    readonly
-                    :value="dayjs(selectedSlot?.extendedProps.booked_at).format('YYYY-MM-DD (dddd) hh:mm a')"
-                />
-            </div>
-            <Link :href="route('patient.appointment.change', selectedSlot?.id)"
-                class="w-full rounded-md text-center px-3 py-2"
-            >
-                Change Time
-            </Link>
-            <Button
-                type="submit"
-                label="Cancel"
-                icon="pi pi-trash"
-                severity="danger"
-                :loading="isLoading"
-                @click="onCancel"
-            />
-        </div>
     </Dialog>
 </template>

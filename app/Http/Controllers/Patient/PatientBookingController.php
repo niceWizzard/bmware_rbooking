@@ -155,7 +155,7 @@ class PatientBookingController extends Controller
 
 
 
-    private static function getAvailableSlots(Doctor $doctor, User $user): array
+    public static function getAvailableSlots(Doctor $doctor, User $user): array
     {
         $today = Carbon::now()->startOfDay();
         $availableSlots = [];
@@ -182,7 +182,7 @@ class PatientBookingController extends Controller
      * @param Doctor $doctor
      * @return array
      */
-    public function getBookingSlots(Doctor $doctor): array
+    public static function getBookingSlots(Doctor $doctor): array
     {
         $slots = self::getAvailableSlots($doctor, \Auth::user());
 

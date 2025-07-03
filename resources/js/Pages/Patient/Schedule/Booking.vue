@@ -83,7 +83,7 @@
 
     async function onDelete(slot: EventApi, setIsLoading: (value: boolean) => void) {
         try {
-            const res = await axios.delete(route('patient.appointment', slot.id));
+            const res = await axios.delete(route('patient.appointment.delete', slot.id));
             if(res.data.succes) {
                 throw new Error(res.data.message);
             }
