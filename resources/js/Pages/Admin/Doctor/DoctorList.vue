@@ -36,7 +36,7 @@
                                 <Link :href="route('schedule.edit', doctor.id)"
                                       class="bg-green-500 px-3 py-2 rounded-md text-white"
                                 >Edit Schedule</Link>
-                                <Link :href="route('admin.dashboard', doctor.code)"
+                                <Link :href="route('admin.dashboard', {code: doctor.code})"
                                       class="bg-green-700 px-3 py-2 rounded-md text-white"
                                 >See Appointments</Link>
                             </template>
