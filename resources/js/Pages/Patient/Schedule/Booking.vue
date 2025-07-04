@@ -10,7 +10,6 @@
     import axios from "axios";
     import {useToast} from "primevue";
     import dayjs from "dayjs";
-    import {useIntervalFn} from "@vueuse/core";
     import {useQuery} from "@tanstack/vue-query";
 
     const toast = useToast();
