@@ -27,6 +27,8 @@ Route::prefix('/patient')
             Route::delete('/', 'delete')->name('.delete');
             Route::get('/change', 'showChangeTime')->name('.change');
             Route::post('/change', 'changeTime');
+
+            Route::get('/change/fetch', 'fetchChangeTimeSlots')->name('.change.fetch');
     });
 
 

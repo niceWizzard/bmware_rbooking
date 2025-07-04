@@ -38,16 +38,9 @@ class AppointmentController extends Controller
         Auth::user()->load('patient');
         $appointment = Appointment::findOrFail($id);
         $doctor = $appointment->details->doctor;
-        $slots = PatientBookingController::getAvailableSlots($appointment->details->doctor, Auth::user());
+        $slots = self::getChangeTimeSlots($appointment);
         return Inertia::render('Patient/Appointment/ChangeTime', [
-            'slots' => [...$slots, [
-                'title' => 'Current',
-                'id' => $appointment->id,
-                'type'=> 'current',
-                'color'=> 'gray',
-                'start' => $appointment->appointment_start_date_time,
-                'end' => $appointment->appointment_end_date_time,
-            ]],
+            'slots' => $slots,
             'doctor' => $doctor,
             'hiddenDays' => $doctor->getDaysOff(),
             'timeRange' => $doctor->getScheduleTimeRange(),
@@ -56,6 +49,27 @@ class AppointmentController extends Controller
                 now()->addDays(15)->toDateString(),
             ],
             'appointmentId' => $appointment->id,
+        ]);
+    }
+
+    public function fetchChangeTimeSlots(string $id) {
+        $appointment = Appointment::find($id);
+        if(is_null($appointment)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, appointment with id ' . $id . ' cannot be found'
+            ]);
+        }
+        if(Auth::user()->patient_id !== $appointment->patient_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, you are not allowed to change this appointment',
+            ]);
+        }
+        $slots = self::getChangeTimeSlots($appointment);
+        return response()->json([
+            'success' => true,
+            'slots' => $slots,
         ]);
     }
 
@@ -112,6 +126,25 @@ class AppointmentController extends Controller
         return response()->json([
             'success' => true,
         ]);
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Collection|Appointment $appointment
+     * @return array
+     */
+    public static function getChangeTimeSlots(\Illuminate\Database\Eloquent\Collection|Appointment $appointment): array
+    {
+        return [
+            ...PatientBookingController::getAvailableSlots($appointment->details->doctor, Auth::user()),
+            [
+                'title' => 'Current',
+                'id' => $appointment->id,
+                'type' => 'current',
+                'color' => 'gray',
+                'start' => $appointment->appointment_start_date_time,
+                'end' => $appointment->appointment_end_date_time,
+            ]
+        ];
     }
 
 }

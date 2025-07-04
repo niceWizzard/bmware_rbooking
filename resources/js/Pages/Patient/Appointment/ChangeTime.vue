@@ -7,7 +7,7 @@ import {Doctor} from "@/types";
 import {Link, router} from "@inertiajs/vue3";
 import FullCalendar from "@fullcalendar/vue3";
 import AppointmentChangeDialog from "@/Components/Appointment/AppointmentChangeDialog.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useToast} from "primevue";
 
@@ -21,7 +21,9 @@ const props = defineProps<{
 }>();
 
 const dialogRef = ref<InstanceType<typeof AppointmentChangeDialog>>();
+const calendarRef = ref<InstanceType<typeof FullCalendar>>();
 const toast = useToast();
+
 const calendarOptions: CalendarOptions = {
     plugins: [timeGridPlugin],
     initialView: 'timeGridWeek',
@@ -37,15 +39,42 @@ const calendarOptions: CalendarOptions = {
     hiddenDays:  props.hiddenDays,
     slotMinTime: props.timeRange[0],
     slotMaxTime: props.timeRange[1],
+    initialEvents:props.slots,
     validRange: {
         start: props.dateRange[0],
         end: props.dateRange[1],
     },
-    events: props.slots,
     eventClick(info) {
         if(info.event.extendedProps.type === 'free')
             dialogRef.value?.setSlot(info.event);
-    }
+    },
+    eventSources: [
+        {
+            events(info, successCb, failureCb) {
+                axios.get(route('patient.appointment.change.fetch', props.appointmentId))
+                    .then(res => {
+                        if (!res.data.success) {
+                            toast.add({
+                                severity: 'error',
+                                summary: "Failed refetching slots",
+                                detail: res.data.message,
+                            });
+                        }
+                        calendarRef.value?.getApi()?.removeAllEvents();
+                        successCb(res.data.slots);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        toast.add({
+                            severity: 'error',
+                            summary: "Failed refetching slots",
+                            detail: err.message,
+                        });
+                        failureCb(err);
+                    })
+            }
+        }
+    ]
 }
 
 async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
@@ -76,6 +105,12 @@ async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
     }
 }
 
+onMounted(() => {
+   setInterval(() => {
+       calendarRef.value?.getApi()?.refetchEvents();
+   }, 3000);
+});
+
 </script>
 
 <template>
@@ -94,7 +129,7 @@ async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
                 <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>
             </div>
             <div class="flex-1 ">
-                <FullCalendar :options="calendarOptions" />
+                <FullCalendar ref="calendarRef" :options="calendarOptions" />
             </div>
         </section>
     </AuthLayout>
