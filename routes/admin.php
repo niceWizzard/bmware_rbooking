@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\DoctorScheduleController;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
@@ -9,10 +10,8 @@ Route::prefix('/admin')
     ->name('admin')
     ->middleware(['auth', 'only.admin'])
     ->group(static function () {
-        Route::get('/dashboard', static function () {
-            Auth::user()->load('admin');
-            return Inertia::render('Admin/Dashboard');
-        })->name('.dashboard');
+        Route::get('/dashboard', [DashboardController::class,'index'])->name('.dashboard');
+        Route::get('/dashboard/fetch', [DashboardController::class,'fetchAppointmentSlots'])->name('.dashboard.fetch');
     });
 
 Route::middleware(['auth', 'only.admin'])

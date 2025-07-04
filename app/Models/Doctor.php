@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
 
 class Doctor extends Model
@@ -21,6 +22,17 @@ class Doctor extends Model
 
     public function schedules() : HasMany {
         return $this->hasMany(DoctorSchedule::class, 'doctor_id', 'id');
+    }
+
+    public function appointments() : HasManyThrough {
+        return $this->hasManyThrough(
+            Appointment::class,          // Final model you want (target)
+            AppointmentDetails::class,   // Intermediate model
+            'doctor_id',                 // Foreign key on AppointmentDetails pointing to Doctor
+            'id',                        // Foreign key on Appointment pointing to AppointmentDetails
+            'id',                        // Local key on Doctor
+            'appointment_id'            // Local key on AppointmentDetails pointing to Appointment
+        );
     }
 
     /**

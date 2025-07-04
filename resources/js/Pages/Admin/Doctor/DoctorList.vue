@@ -22,7 +22,7 @@
             </div>
             <div class="flex flex-wrap gap-4"
             >
-                <Card class="w-96"
+                <Card class="w-[32rem]"
                     v-for="doctor of doctors" :key="doctor.id"
                 >
                     <template #title>Dr. {{doctor.name}}</template>
@@ -34,8 +34,11 @@
                             >
                                 <Button label="See Schedule" @click="router.visit(route('schedule.view', doctor.id))" />
                                 <Link :href="route('schedule.edit', doctor.id)"
-                                      class="bg-green-600 px-3 py-2 rounded-md text-white"
+                                      class="bg-green-500 px-3 py-2 rounded-md text-white"
                                 >Edit Schedule</Link>
+                                <Link :href="route('admin.dashboard', doctor.code)"
+                                      class="bg-green-700 px-3 py-2 rounded-md text-white"
+                                >See Appointments</Link>
                             </template>
                             <Link :href="route('schedule.create', doctor.id)" v-else
                                 class="bg-green-600 px-3 py-2 rounded-md text-white"
