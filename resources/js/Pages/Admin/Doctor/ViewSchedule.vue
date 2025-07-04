@@ -67,9 +67,14 @@ const calendarOptions: CalendarOptions = {
         <section class="p-8 flex flex-col">
            <div class="flex gap-2 justify-between items-center">
                <h3 class="text-lg font-medium"> Dr. {{doctor.name}}</h3>
-               <Link :href="route('schedule.edit', doctor.id)"
-                     class="px-3 py-2 rounded-md bg-green-600 text-white"
-               >Edit</Link>
+               <div class="flex gap-4">
+                   <Link :href="route('doctor.list')"
+                         class="px-3 py-2 rounded-md bg-gray-600 text-white"
+                   >Back</Link>
+                   <Link :href="route('schedule.edit', doctor.id)"
+                         class="px-3 py-2 rounded-md bg-green-600 text-white"
+                   >Edit</Link>
+               </div>
            </div>
 
             <div class="flex-1 p-4">
