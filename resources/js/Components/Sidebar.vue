@@ -66,9 +66,6 @@
                     <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer pl-6" >
                         Profile
                     </li>
-                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer pl-6" >
-                        Settings
-                    </li>
                     <li class="border-t my-1"></li>
                     <Button
                         @click="logout"
