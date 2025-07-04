@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import AuthLayout from "@/Layouts/AuthLayout.vue";
-import {Head, useForm, usePage} from "@inertiajs/vue3";
-import ProfileForm from "@/Pages/Profile/ProfileForm.vue";
-import AccountDeleteForm from "@/Pages/Profile/AccountDeleteForm.vue";
+import {Head} from "@inertiajs/vue3";
+import ProfileForm from "@/Pages/Profile/Partials/ProfileForm.vue";
+import AccountDeleteForm from "@/Pages/Profile/Partials/AccountDeleteForm.vue";
 
 </script>
 
