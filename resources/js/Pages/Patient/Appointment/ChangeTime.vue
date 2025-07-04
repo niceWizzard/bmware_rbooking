@@ -27,6 +27,7 @@ const toast = useToast();
 
 const {
     data: fetchedSlots,
+    refetch: refetchSlots,
 } = useQuery<any>({
     queryKey: ['changeEvents'],
     refetchInterval: 2000,
@@ -106,6 +107,7 @@ async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
     } finally {
         setIsLoading(false);
         dialogRef.value?.setSlot(null);
+        refetchSlots();
     }
 }
 

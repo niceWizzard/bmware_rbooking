@@ -24,7 +24,7 @@
 
     const bookSlotDialogRef = ref<InstanceType<typeof BookSlotDialog>>();
     const calendarRef = ref<InstanceType<typeof FullCalendar>>();
-    const {data: fetchedSlots} = useQuery({
+    const {data: fetchedSlots, refetch: refetchSlots} = useQuery({
         queryKey: ['bookingSlots'],
         refetchInterval: 2000,
         initialData: props.slots,
@@ -90,6 +90,7 @@
         }).finally(() => {
             setIsLoading(false);
             bookSlotDialogRef.value?.setSlot(null);
+            refetchSlots();
         });
     }
 
@@ -116,6 +117,7 @@
             })
         } finally {
             setIsLoading(false);
+            refetchSlots();
         }
     }
 
