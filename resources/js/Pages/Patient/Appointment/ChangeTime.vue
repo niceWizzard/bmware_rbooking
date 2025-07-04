@@ -54,17 +54,22 @@ async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
             date: event.start
         });
         if(!res.data.success) {
-            console.error(res.data.message);
-            return;
+            throw new Error(res.data.message)
         }
         toast.add({
             severity: 'success',
             summary: "Appointment updated!",
+            life: 3000,
         });
         router.visit(route('patient.book'))
     } catch (e) {
         const err = e as Error;
-        console.log(err);
+        toast.add({
+            severity: 'error',
+            detail: err.message,
+            summary: 'Something went wrong.',
+            life: 3000,
+        });
     } finally {
         setIsLoading(false);
         dialogRef.value?.setSlot(null);
