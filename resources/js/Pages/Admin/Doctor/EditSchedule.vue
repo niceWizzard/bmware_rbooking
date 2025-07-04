@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import Layout from '@/Layouts/AuthLayout.vue'
-  import { Head } from '@inertiajs/vue3'
+  import {Head, Link} from '@inertiajs/vue3'
   import Button from "primevue/button";
   import ScheduleCalendarCreator from "@/Components/Schedule/ScheduleCalendarCreator.vue";
   import {Doctor} from "@/types";
@@ -20,7 +20,7 @@
 
   async function update() {
       const eventsFromCalendar = calendarRef.value?.getCalendarEvents();
-      const events = eventsFromCalendar.map(e => ({
+      const events = eventsFromCalendar?.map(e => ({
           id: e.id,
           title: e.title,
           start: dayjs(e.start).format('YYYY-MM-DDTHH:mm:ss'), // no Z suffix
@@ -28,7 +28,7 @@
           clinic: e.extendedProps.clinic,
           day: dayjs(e.start).day()
       }))
-      if(events.length === 0){
+      if(!events || events.length === 0){
           toast.add({
               detail:"Please add a schedule.",
               life: 2000,
@@ -105,7 +105,18 @@
           <p class="text-lg text-gray-600">
               Edit the schedule of the doctor
           </p>
-          <div class="flex justify-end w-full gap-3">
+          <div class="flex justify-between w-full">
+            <Link :href="route('doctor.list')"
+                  class="text-black bg-gray-400 px-3 py-2 rounded-md"
+            >
+              Back
+            </Link>
+            <div class="flex justify-end w-full gap-3">
+              <Link :href="route('schedule.view', doctor.id)"
+                    class="text-white bg-green-600 px-3 py-2 rounded-md"
+              >
+                View
+              </Link>
               <Button
                   label="Reset"
                   severity="danger"
@@ -115,6 +126,7 @@
                   label="Update"
                   @click="update"
               />
+            </div>
           </div>
           <div class="flex-1 p-4">
               <ScheduleCalendarCreator :toast="toast" ref="calendarRef" :initial-events="schedule" />
