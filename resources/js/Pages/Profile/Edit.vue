@@ -4,6 +4,7 @@ import AuthLayout from "@/Layouts/AuthLayout.vue";
 import {Head} from "@inertiajs/vue3";
 import ProfileForm from "@/Pages/Profile/Partials/ProfileForm.vue";
 import AccountDeleteForm from "@/Pages/Profile/Partials/AccountDeleteForm.vue";
+import PasswordChangeForm from "@/Pages/Profile/Partials/PasswordChangeForm.vue";
 
 </script>
 
@@ -12,6 +13,7 @@ import AccountDeleteForm from "@/Pages/Profile/Partials/AccountDeleteForm.vue";
         <Head title="Edit Profile" />
         <section class="p-8 flex flex-col items-center gap-4">
             <ProfileForm />
+            <PasswordChangeForm/>
             <AccountDeleteForm />
         </section>
     </AuthLayout>
