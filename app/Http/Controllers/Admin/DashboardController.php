@@ -8,6 +8,7 @@ use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -31,10 +32,17 @@ class DashboardController extends Controller
 
         $slots = self::getAppointmentSlots($doctor);
         Auth::user()->load('admin');
+        $clinicCounts = DB::table('appointments')
+            ->join('booking_appointment_details', 'appointments.id', '=', 'booking_appointment_details.appointment_id')
+            ->where('booking_appointment_details.doctor_id', $doctor->id)
+            ->select('appointments.clinic', DB::raw('count(*) as count'))
+            ->groupBy('appointments.clinic')
+            ->get()->toArray();
         return Inertia::render('Admin/Dashboard', [
             'doctor' => $doctor,
             'timeRange' => $doctor->getScheduleTimeRange(),
             'slots' => $slots,
+            'clinicCounts' => $clinicCounts,
         ]);
     }
 

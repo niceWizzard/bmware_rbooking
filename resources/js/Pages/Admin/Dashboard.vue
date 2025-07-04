@@ -15,6 +15,7 @@ const props = defineProps<{
     doctor: Doctor,
     slots: EventInput[],
     timeRange: [string, string],
+    clinicCounts: {clinic: string, count: number}[]
 }>();
 
 const toast = useToast();
@@ -75,6 +76,14 @@ const calendarOptions : CalendarOptions = reactive({
                         <i class="pi pi-arrow-right-arrow-left"></i>
                         Change Doctors</Link>
                 </div>
+            </div>
+            <div class="flex gap-4 items-center flex-wrap">
+                Clinics:
+                <p class="px-2 py-1 rounded-md bg-gray-400 text-white"
+                    v-for="c of clinicCounts"
+                >
+                    {{c.clinic}} ({{c.count}})
+                </p>
             </div>
             <div class="flex-1 ">
                 <FullCalendar  ref="calendarRef" :options="calendarOptions" />
