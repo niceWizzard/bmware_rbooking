@@ -51,6 +51,7 @@ const {
                 summary: "Failed refetching slots",
                 detail: err.message,
             });
+            return [];
         }
     }
 })

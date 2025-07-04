@@ -41,6 +41,7 @@
                     summary: 'An error occurred while fetching bookings',
                     detail: err.message,
                 });
+                return [];
             }
         },
     })
