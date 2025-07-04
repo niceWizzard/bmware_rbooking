@@ -119,17 +119,18 @@ async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
     <AppointmentChangeDialog ref="dialogRef" :on-submit="onSubmit" :doctor="doctor" />
     <AuthLayout header-title="Change Time">
         <section class="p-8 flex flex-col gap-4 " >
-            <p class="text-sm font-light text-gray-400">
-                Please select a new time for your appointment.
-            </p>
+
             <div class="flex justify-between">
                 <div class="flex gap-4">
                     <Link :href="route('patient.book')"
                           class="px-3 py-2 rounded-md bg-green-600 text-white flex items-center gap-3" >
                         Cancel</Link>
                 </div>
-                <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>
+                <h3 class="text-2xl font-medium"> Update your Appointment Time</h3>
             </div>
+            <p class="text-md font-light text-gray-600">
+                Please select a new time for your appointment.
+            </p>
             <div class="flex-1 ">
                 <FullCalendar ref="calendarRef" :options="calendarOptions"  />
             </div>
