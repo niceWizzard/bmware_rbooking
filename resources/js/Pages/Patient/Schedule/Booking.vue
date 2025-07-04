@@ -5,12 +5,13 @@
     import {CalendarOptions, EventApi} from "@fullcalendar/core";
     import timeGridPlugin from "@fullcalendar/timegrid";
     import {Link, Head} from "@inertiajs/vue3";
-    import {onMounted, ref} from "vue";
+    import {onMounted, reactive, ref} from "vue";
     import BookSlotDialog from "@/Components/Schedule/BookSlotDialog.vue";
     import axios from "axios";
     import {useToast} from "primevue";
     import dayjs from "dayjs";
     import {useIntervalFn} from "@vueuse/core";
+    import {useQuery} from "@tanstack/vue-query";
 
     const toast = useToast();
     const props = defineProps<{
@@ -24,8 +25,27 @@
 
     const bookSlotDialogRef = ref<InstanceType<typeof BookSlotDialog>>();
     const calendarRef = ref<InstanceType<typeof FullCalendar>>();
-
-    const calendarOptions: CalendarOptions = {
+    const {data: fetchedSlots} = useQuery({
+        queryKey: ['bookingSlots'],
+        refetchInterval: 2000,
+        initialData: props.slots,
+        queryFn: async () => {
+            try {
+                const res = await axios.get(route('patient.book.fetch', { code: props.doctor!.code }));
+                if (!res.data.success)
+                    throw new Error(res.data.message);
+                return res.data.slots;
+            } catch (error: unknown) {
+                const err = error as Error;
+                toast.add({
+                    severity: 'error',
+                    summary: 'An error occurred while fetching bookings',
+                    detail: err.message,
+                });
+            }
+        },
+    })
+    const calendarOptions = reactive<CalendarOptions>({
         plugins: [timeGridPlugin],
         initialView: 'timeGridWeek',
         allDaySlot: false,
@@ -44,17 +64,11 @@
             start: props.dateRange[0],
             end: props.dateRange[1],
         },
+        events: fetchedSlots as any,
         eventClick (info) {
             bookSlotDialogRef.value?.setSlot(info.event);
         },
-
-        eventSources: [
-            {
-              id: 'initial',
-              events: props.slots,
-            }
-        ]
-    }
+    })
 
     function onSubmit(slot : EventApi, setIsLoading: (value: boolean) => void) {
         axios.post(route('patient.book'), {
@@ -106,54 +120,8 @@
         }
     }
 
-    const {pause: pausePoll, resume: resumePoll } = useIntervalFn(() => {
-        const calendar = calendarRef.value?.getApi();
-        calendar?.refetchEvents();
-    }, 2000)
-
-    onMounted(() => {
-        const calendar = calendarRef.value?.getApi();
-        if (!calendar) return;
-
-        // Remove the initial event source
-        const removeInitialSource = () => {
-            const initialSource = calendar.getEventSourceById('initial');
-            if (initialSource) {
-                initialSource.remove();
-            }
-        }
-
-        setTimeout(() => {
-            let haveRemoved = false;
-            calendar.addEventSource({
-                id: 'dynamic',
-                async events(info: any, successCb: Function, failureCb: Function) {
-                    try {
-                        const res = await axios.get(route('patient.book.fetch', { code: props.doctor!.code }));
-                        if (!res.data.success) throw new Error(res.data.message);
-                        if(!haveRemoved) {
-                            haveRemoved = true;
-                            removeInitialSource();
-                        }
-                        successCb(res.data.slots);
-                    } catch (error: unknown) {
-                        const err = error as Error;
-                        toast.add({
-                            severity: 'error',
-                            summary: 'An error occurred while fetching bookings',
-                            detail: err.message,
-                        });
-                        pausePoll();
-                        failureCb(err);
-                    }
-                }
-            });
-        }, 2000); // Reduced delay for better responsiveness
-    });
-
 
 </script>
-
 <template>
     <Head title="Book an Appointment" />
     <AuthLayout header-title="Booking" >
