@@ -56,11 +56,14 @@ class DoctorScheduleController extends Controller
         return redirect($user->getDashboardLink());
     }
 
-    public function view(string $id): Response
+    public function view(string $id)
     {
         $doctor = Doctor::findOrFail($id);
         Auth::user()->load('admin');
 
+        if(!$doctor->schedules()->exists()) {
+            return redirect()->route('doctor.list');
+        }
 
         return Inertia::render('Admin/Doctor/ViewSchedule', [
             'doctor' => $doctor,

@@ -29,7 +29,15 @@
                     <template #subtitle>Expertise: {{doctor.specialty}}</template>
                     <template #content>
                         <div class="flex gap-4">
-                            <Button label="See Schedule" @click="router.visit(route('schedule.view', doctor.id))" />
+                            <template
+                                v-if="doctor.schedules_exists"
+                            >
+                                <Button label="See Schedule" @click="router.visit(route('schedule.view', doctor.id))" />
+
+                            </template>
+                            <Link :href="route('schedule.create', doctor.id)" v-else
+                                class="bg-green-600 px-3 py-2 rounded-md text-white"
+                            >Create Schedule</Link>
                         </div>
                     </template>
                 </Card>

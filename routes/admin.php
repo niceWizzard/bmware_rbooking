@@ -38,8 +38,9 @@ Route::middleware(['auth', 'only.admin'])
 
     Route::get('/', static function () {
         Auth::user()->load('admin');
+        $doctors = Doctor::withExists('schedules')->get();
         return Inertia::render('Admin/Doctor/DoctorList', [
-            'doctors' => Doctor::all()
+            'doctors' => $doctors,
         ]);
     })->name('.list');
 });

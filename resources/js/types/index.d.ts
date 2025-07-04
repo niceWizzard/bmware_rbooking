@@ -24,6 +24,7 @@ export interface Doctor {
     name: string;
     code: string;
     specialty: string;
+    schedules_exists: boolean;
 }
 
 export interface Schedule {
