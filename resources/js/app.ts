@@ -17,6 +17,7 @@ import "primeicons/primeicons.css";
 import PrimeVue from 'primevue/config';
 import ToastService from "primevue/toastservice";
 import ConfirmationService from "primevue/confirmationservice";
+import {VueQueryPlugin} from "@tanstack/vue-query";
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -42,6 +43,7 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(ToastService)
             .use(ConfirmationService)
+            .use(VueQueryPlugin)
             .component('Link', Link)
             .mount(el);
     },
