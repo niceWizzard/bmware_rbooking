@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 
-import {CalendarOptions, EventApi} from "@fullcalendar/core";
+import {CalendarOptions, EventApi, EventInput} from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/vue3";
 import ScheduleEditDialog from "@/Components/Schedule/ScheduleEditDialog.vue";
 import {ref} from "vue";
@@ -11,8 +11,10 @@ import {ToastServiceMethods, useToast} from "primevue";
 
 const {
     toast,
+    initialEvents
 } = defineProps<{
     toast: ToastServiceMethods,
+    initialEvents?: EventInput[]
 }>();
 
 
@@ -23,8 +25,12 @@ const selectedEvent = ref<EventApi|null>(null);
 
 
 defineExpose({
-    resetCalendar: (): void => {
-        calendarRef.value.getApi().removeAllEvents();
+    resetCalendar: (asInitial = false): void => {
+        if(asInitial) {
+            calendarOptions.events = JSON.parse(JSON.stringify(initialEvents)) ?? [];
+        } else {
+            calendarOptions.events = [];
+        }
     },
     getCalendarEvents: () : EventApi[] => {
         return calendarRef.value.getApi().getEvents()
