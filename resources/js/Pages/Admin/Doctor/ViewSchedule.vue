@@ -6,6 +6,7 @@ import FullCalendar from "@fullcalendar/vue3";
 import {CalendarOptions, EventInput, EventSourceInput} from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayjs from "dayjs";
+import {Link} from "@inertiajs/vue3";
 
 
 const props = defineProps<{
@@ -64,7 +65,13 @@ const calendarOptions: CalendarOptions = {
 <template>
     <AuthLayout headerTitle="Schedule" >
         <section class="p-8 flex flex-col">
-           <h3 class="text-lg font-medium"> Dr. {{doctor.name}}</h3>
+           <div class="flex gap-2 justify-between items-center">
+               <h3 class="text-lg font-medium"> Dr. {{doctor.name}}</h3>
+               <Link :href="route('schedule.edit', doctor.id)"
+                     class="px-3 py-2 rounded-md bg-green-600 text-white"
+               >Edit</Link>
+           </div>
+
             <div class="flex-1 p-4">
                 <FullCalendar  :options="calendarOptions" />
             </div>

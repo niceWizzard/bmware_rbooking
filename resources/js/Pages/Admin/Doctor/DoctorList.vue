@@ -33,7 +33,9 @@
                                 v-if="doctor.schedules_exists"
                             >
                                 <Button label="See Schedule" @click="router.visit(route('schedule.view', doctor.id))" />
-
+                                <Link :href="route('schedule.edit', doctor.id)"
+                                      class="bg-green-600 px-3 py-2 rounded-md text-white"
+                                >Edit Schedule</Link>
                             </template>
                             <Link :href="route('schedule.create', doctor.id)" v-else
                                 class="bg-green-600 px-3 py-2 rounded-md text-white"
