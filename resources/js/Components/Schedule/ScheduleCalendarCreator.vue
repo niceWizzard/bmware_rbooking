@@ -4,7 +4,7 @@
 import {CalendarOptions, EventApi, EventInput} from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/vue3";
 import ScheduleEditDialog from "@/Components/Schedule/ScheduleEditDialog.vue";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import {ToastServiceMethods, useToast} from "primevue";
@@ -37,7 +37,7 @@ defineExpose({
     }
 });
 
-const calendarOptions : CalendarOptions = {
+const calendarOptions : CalendarOptions = reactive({
     plugins: [timeGridPlugin, interactionPlugin],
     initialView: 'timeGridWeek',
     allDaySlot: false,
@@ -53,6 +53,7 @@ const calendarOptions : CalendarOptions = {
     expandRows: true,
     eventOverlap: false,
     stickyHeaderDates: true,
+    initialEvents: initialEvents,
     eventClick(info){
         selectedEvent.value = info.event;
     },
@@ -111,7 +112,7 @@ const calendarOptions : CalendarOptions = {
             id: (new Date()).toString(),
         });
     },
-};
+});
 
 </script>
 

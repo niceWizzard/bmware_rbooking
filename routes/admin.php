@@ -53,4 +53,7 @@ Route::middleware(['auth','only.admin'])
     Route::get('/create', 'create')->name('.create');
     Route::post('/create', 'store');
     Route::get('/', 'view')->name('.view');
+
+    Route::get('/edit', 'edit')->name('.edit');
+    Route::post('/edit', 'update');
 });

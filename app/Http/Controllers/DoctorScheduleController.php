@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -69,6 +70,95 @@ class DoctorScheduleController extends Controller
             'doctor' => $doctor,
             'schedules' => $doctor->schedules->map(fn ($s) => $s->only(['id', 'day', 'start', 'end', 'clinic'])),
         ]);
+    }
+
+    public function edit(string $id) {
+        $doctor = Doctor::findOrFail($id);
+        Auth::user()->load('admin');
+
+        if(!$doctor->schedules()->exists()) {
+            return redirect()->route('doctor.list');
+        }
+
+        $schedule = $doctor->schedules->map(function (DoctorSchedule $schedule) {
+           return [
+               'id' => $schedule->id,
+               'start' => $schedule->start->dayOfWeek($schedule->day->value)->toDateTimeString(),
+               'end' => $schedule->end->dayOfWeek($schedule->day->value)->toDateTimeString(),
+               'clinic' => $schedule->clinic,
+               'title' => 'Schedule',
+           ];
+        });
+        return Inertia::render('Admin/Doctor/EditSchedule', [
+            'doctor' => $doctor,
+            'schedule' => $schedule,
+        ]);
+    }
+
+    public function update(string $id, Request $request) {
+        $doctor = Doctor::findOrFail($id);
+        $user = Auth::user();
+        if(!$user?->is_admin || !$doctor->schedules()->exists()) {
+            return response()->json([
+                'message' => 'You cannot edit the schedule for this doctor.',
+                'success' => false,
+            ]);
+        }
+
+        $data = $request->validate([
+            'events.*.clinic' => ['required', 'string'],
+            'events.*.start' => ['required', 'date'],
+            'events.*.end' => ['required', 'date'],
+        ]);
+
+        try {
+            DB::transaction(static function() use ($doctor, $data) {
+                $existingSchedules = $doctor->schedules->keyBy(fn($schedule) => $schedule->day->value);
+                $incomingDays = [];
+
+                foreach ($data['events'] as $event) {
+                    $start = Carbon::parse($event['start']);
+                    $end = Carbon::parse($event['end']);
+                    $day = $start->dayOfWeek;
+
+                    $incomingDays[] = $day;
+
+                    $scheduleData = [
+                        'clinic' => $event['clinic'],
+                        'start' => $start->toTimeString(),
+                        'end' => $end->toTimeString(),
+                    ];
+
+                    if ($existingSchedules->has($day)) {
+                        // Update the existing schedule
+                        $existingSchedules[$day]->update($scheduleData);
+                    } else {
+                        // Create new schedule
+                        DoctorSchedule::create([
+                            'doctor_id' => $doctor->id,
+                            'day' => $day,
+                            ...$scheduleData
+                        ]);
+                    }
+                }
+
+                // Delete schedules for days that are no longer present in the new data
+                foreach ($existingSchedules as $day => $schedule) {
+                    if (!in_array($day, $incomingDays, true)) {
+                        $schedule->delete();
+                    }
+                }
+            });
+            return response()->json([
+                'success' => true,
+            ]);
+        } catch(\Throwable $e) {
+            return response()->json([
+                'message' => $e->getTraceAsString(),
+                'success' => false,
+            ]);
+        }
+
     }
 
 
