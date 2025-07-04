@@ -21,12 +21,12 @@ class DashboardController extends Controller
             $code = Cookie::get('doctorCode');
         }
         if(is_null($code)) {
-            return redirect(route('patient.doctors'));
+            return redirect(route('doctor.list'));
         }
         $doctor = Doctor::whereCode($code)->first();
 
         if(is_null($doctor)) {
-            return redirect(route('patient.doctors'));
+            return redirect(route('doctor.list'));
         }
         Cookie::queue(Cookie::make('doctorCode', $doctor->code, 24 * 60 * 7));
 
