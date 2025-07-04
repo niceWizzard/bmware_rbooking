@@ -88,7 +88,14 @@
                 summary: 'Booked successfully',
                 life: 3000,
             })
-        }).finally(() => {
+        }).catch(err => {
+            toast.add({
+                severity: 'error',
+                summary: "Something went wrong.",
+                detail: err.message,
+            })
+        })
+            .finally(() => {
             setIsLoading(false);
             bookSlotDialogRef.value?.setSlot(null);
             refetchSlots();
