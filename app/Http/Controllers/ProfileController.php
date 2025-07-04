@@ -16,8 +16,10 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): Response
+    public function show(Request $request): Response
     {
+        $user = Auth::user();
+        $user?->load('patient', 'admin');
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
@@ -60,4 +62,6 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+
 }

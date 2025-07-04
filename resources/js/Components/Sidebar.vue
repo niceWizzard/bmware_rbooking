@@ -2,7 +2,7 @@
     import {ref} from "vue";
     import Button from 'primevue/button'
     import Popover from 'primevue/popover'
-    import {router, usePage} from "@inertiajs/vue3";
+    import {Link, router, usePage} from "@inertiajs/vue3";
 
     const loggingOut = ref(false);
     const {props} = usePage();
@@ -63,9 +63,12 @@
             />
             <Popover ref="overlayRef">
                 <ul class="flex flex-col gap-2 min-w-[160px]">
-                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer pl-6" >
+                    <Link :href="route('profile.edit')"
+                          class="px-4 py-2 hover:bg-gray-100 cursor-pointer pl-6"
+                    >
                         Profile
-                    </li>
+                    </Link>
+
                     <li class="border-t my-1"></li>
                     <Button
                         @click="logout"
