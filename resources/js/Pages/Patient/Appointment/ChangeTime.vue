@@ -4,7 +4,7 @@ import AuthLayout from "@/Layouts/AuthLayout.vue";
 import {CalendarOptions, EventApi} from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {Doctor} from "@/types";
-import {Link, router} from "@inertiajs/vue3";
+import { Head, Link, router } from '@inertiajs/vue3';
 import FullCalendar from "@fullcalendar/vue3";
 import AppointmentChangeDialog from "@/Components/Appointment/AppointmentChangeDialog.vue";
 import {reactive, ref} from "vue";
@@ -116,6 +116,7 @@ async function onSubmit(event: EventApi,  setIsLoading: (v : boolean) => void) {
 </script>
 
 <template>
+    <Head title="Change Appointment Time" />
     <AppointmentChangeDialog ref="dialogRef" :on-submit="onSubmit" :doctor="doctor" />
     <AuthLayout header-title="Change Time">
         <section class="p-8 flex flex-col gap-4 " >

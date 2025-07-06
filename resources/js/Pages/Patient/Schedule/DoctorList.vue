@@ -2,7 +2,7 @@
     import {Doctor} from "@/types";
     import CardLayout from "@/Layouts/CardLayout.vue";
     import Card from 'primevue/card'
-    import {Link, usePage} from "@inertiajs/vue3";
+    import { Head, Link, usePage } from '@inertiajs/vue3';
     const props = defineProps<{
         doctors: Doctor[];
     }>()
@@ -10,6 +10,7 @@
 </script>
 
 <template>
+    <Head title="List of Doctors" />
     <CardLayout class="w-full">
         <template #header>
             <div class="flex gap-2 justify-end" v-if="!auth.user">

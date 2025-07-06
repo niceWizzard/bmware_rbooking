@@ -4,7 +4,7 @@ import { Doctor, Schedule } from '@/types';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import dayjs from 'dayjs';
 
 const props = defineProps<{
@@ -62,6 +62,7 @@ const calendarOptions: CalendarOptions = {
 </script>
 
 <template>
+    <Head :title="`Schedule of ${doctor.name}`" />
     <AuthLayout headerTitle="Schedule">
         <section class="flex flex-col p-8">
             {{ schedules }}

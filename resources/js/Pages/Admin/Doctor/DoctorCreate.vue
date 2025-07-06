@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import AuthLayout from "@/Layouts/AuthLayout.vue";
-import {useForm} from "@inertiajs/vue3";
+import { Head, useForm } from '@inertiajs/vue3';
 import Input from '@/Components/Input.vue'
 import Button from 'primevue/button';
 
@@ -19,6 +19,7 @@ function onSubmit() {
 </script>
 
 <template>
+    <Head title="Create a doctor" />
     <AuthLayout headerTitle="Create Doctor" >
         <section class="p-8 flex flex-col gap-4 items-center">
             <h3 class="text-lg font-medium">

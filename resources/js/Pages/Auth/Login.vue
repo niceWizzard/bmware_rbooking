@@ -16,6 +16,7 @@ function onFormSubmit() {
 </script>
 
 <template>
+    <Head title="Login"/>
     <CardLayout class="w-full">
         <Head title="Login" />
         <template #header>

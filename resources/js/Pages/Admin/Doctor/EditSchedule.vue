@@ -98,8 +98,8 @@
 </script>
 
 <template>
-  <Layout header-title="Edit Schedule">
-    <Head title="EditSchedule" />
+    <Head title="Edit Schedule" />
+    <Layout header-title="Edit Schedule">
       <section class="flex flex-col p-8 ">
           <h3 class="text-2xl">Dr. {{doctor.name}}</h3>
           <p class="text-lg text-gray-600">

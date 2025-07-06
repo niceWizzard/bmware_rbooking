@@ -64,7 +64,7 @@ const calendarOptions : CalendarOptions = reactive({
 
 <template>
     <Head
-        title="Dashboard"
+        title="Admin Dashboard"
     />
     <AuthLayout header-title="Admin Dashboard">
         <section class="p-8 flex flex-col gap-4 ">

@@ -22,7 +22,7 @@
 
 <template>
   <Layout header-title="Verify your email address">
-    <Head title="Verify Email" />
+    <Head title="Verify your Email" />
       <div class="p-8">
           <div class="mb-4 text-sm text-gray-600">
               Thanks for signing up! Before getting started, could you verify your

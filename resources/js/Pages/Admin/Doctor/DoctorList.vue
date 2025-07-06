@@ -13,6 +13,7 @@
 </script>
 
 <template>
+    <Head title="List of Doctors" />
     <AuthLayout headerTitle="Doctors" >
         <section class="p-8">
             <div class="flex w-full justify-between">
