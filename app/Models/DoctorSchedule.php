@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DayOfWeek;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,14 +27,43 @@ class DoctorSchedule extends Model
 
     protected $casts = [
         'day' => DayOfWeek::class,
-        'start' => 'datetime:H:i:s',
-        'end' => 'datetime:H:i:s',
-        'break_start' => 'datetime:H:i:s',
-        'break_end' => 'datetime:H:i:s',
+    ];
+
+    protected $appends = [
+        'start_at',
+        'end_at'
     ];
 
     public function doctor(): BelongsTo {
         return $this->belongsTo(Doctor::class, 'doctor_id', 'id');
+    }
+
+    public function startAt() : Attribute {
+        return Attribute::get(function ($attributes) : Carbon {
+            return Carbon::createFromFormat('H:i:s', $this->start)
+                ->dayOfWeek($this->day->value);
+        });
+    }
+
+    public function endAt() : Attribute {
+        return Attribute::get(function ($attributes) : Carbon {
+            return Carbon::createFromFormat('H:i:s', $this->end)
+                ->dayOfWeek($this->day->value);
+        });
+    }
+
+    public function breakStartAt() : Attribute {
+        return Attribute::get(function ($attributes) : Carbon {
+            return Carbon::createFromFormat('H:i:s', $this->break_start)
+                ->dayOfWeek($this->day->value);
+        });
+    }
+
+    public function breakEndAt() : Attribute {
+        return Attribute::get(function ($attributes) : Carbon {
+            return Carbon::createFromFormat('H:i:s', $this->break_end)
+                ->dayOfWeek($this->day->value);
+        });
     }
 
     public function availableSlotsAt(Carbon $date, ?User $user = null): array
@@ -45,10 +75,10 @@ class DoctorSchedule extends Model
         $availableTime = [];
 
         // Parse times as Carbon objects on the given date
-        $start = $this->start->setDateFrom($date);
+        $start = $this->start_at->setDateFrom($date);
 //        $breakStart = $this->break_time_start ? $this->break_time_start->setDateFrom($date) : null;
 //        $breakEnd = $this->break_time_end ? $this->break_time_end->setDateFrom($date) : null;
-        $end = $this->end->setDateFrom($date);
+        $end = $this->end_at->setDateFrom($date);
 
         // 1-hour slots before break
         $current = $start->copy();

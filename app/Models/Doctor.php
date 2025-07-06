@@ -20,6 +20,8 @@ class Doctor extends Model
         'code',
     ];
 
+
+
     public function schedules() : HasMany {
         return $this->hasMany(DoctorSchedule::class, 'doctor_id', 'id');
     }
@@ -69,11 +71,11 @@ class Doctor extends Model
         $minTime = now()->setTime(23,0);
         $maxTime = now()->setTime(0, 0);
         foreach ($this->schedules as $schedule) {
-            if($schedule->start->hour < $minTime->hour) {
-                $minTime = $schedule->start->copy();
+            if($schedule->start_at->hour < $minTime->hour) {
+                $minTime = $schedule->start_at->copy();
             }
-            if($schedule->end->hour > $maxTime->hour) {
-                $maxTime = $schedule->end->copy();
+            if($schedule->end_at->hour > $maxTime->hour) {
+                $maxTime = $schedule->end_at->copy();
             }
         }
 

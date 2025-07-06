@@ -68,7 +68,7 @@ class DoctorScheduleController extends Controller
 
         return Inertia::render('Admin/Doctor/ViewSchedule', [
             'doctor' => $doctor,
-            'schedules' => $doctor->schedules->map(fn ($s) => $s->only(['id', 'day', 'start', 'end', 'clinic'])),
+            'schedules' => $doctor->schedules->map(fn ($s) => $s->only(['id', 'day', 'start_at', 'end_at', 'clinic'])),
         ]);
     }
 
@@ -83,8 +83,8 @@ class DoctorScheduleController extends Controller
         $schedule = $doctor->schedules->map(function (DoctorSchedule $schedule) {
            return [
                'id' => $schedule->id,
-               'start' => $schedule->start->dayOfWeek($schedule->day->value)->toDateTimeString(),
-               'end' => $schedule->end->dayOfWeek($schedule->day->value)->toDateTimeString(),
+               'start' => $schedule->start_at->toDateTimeString(),
+               'end' => $schedule->end_at->toDateTimeString(),
                'clinic' => $schedule->clinic,
                'title' => 'Schedule',
            ];

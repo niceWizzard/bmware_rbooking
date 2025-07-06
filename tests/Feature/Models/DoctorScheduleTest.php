@@ -28,13 +28,13 @@ test('expect start,end to be date', function () {
         'end' => now()->setHour(20)->toTimeString(),
     ]);
     expect(
-        $schedule->start
+        $schedule->start_at
     )
         ->toBeInstanceOf(Carbon::class)
-        ->and($schedule->start->hour)->toEqual(10)
-    ->and($schedule->end)
+        ->and($schedule->start_at->hour)->toEqual(10)
+    ->and($schedule->end_at)
         ->toBeInstanceOf(Carbon::class)
-        ->and( $schedule->end->hour)->toEqual(20);
+        ->and( $schedule->end_at->hour)->toEqual(20);
 });
 
 
@@ -44,10 +44,12 @@ test('expect break_start,break_end to be date', function () {
         'break_end' => now()->setHour(11)->toTimeString(),
     ]);
     expect(
-        $schedule->break_start
+        $schedule->break_start_at
     )->toBeInstanceOf(Carbon::class)
-        ->and($schedule->break_end)
-        ->toBeInstanceOf(Carbon::class);
+        ->and($schedule->break_start_at->hour)->toEqual(10)
+        ->and($schedule->break_end_at)
+        ->toBeInstanceOf(Carbon::class)
+        ->and( $schedule->break_end_at->hour)->toEqual(11);
 });
 
 
