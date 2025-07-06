@@ -4,7 +4,7 @@
     import Card from 'primevue/card';
     import Button from 'primevue/button';
     import {Doctor} from "@/types";
-    import {Link, router} from "@inertiajs/vue3";
+    import { Head, Link, router } from '@inertiajs/vue3';
 
     defineProps<{
         doctors:  Doctor[],
