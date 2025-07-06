@@ -115,7 +115,7 @@ async function update() {
                 <div class="flex w-full justify-end gap-3">
                     <Link
                         :href="route('schedule.view', doctor.id)"
-                        class="rounded-md bg-green-600 px-3 py-2 text-white"
+                        class="rounded-md bg-primary px-3 py-2 text-white"
                     >
                         View
                     </Link>

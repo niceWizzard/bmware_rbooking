@@ -40,7 +40,7 @@ const {
                     <div class="flex justify-end gap-4">
                         <Link
                             :href="route('patient.book', { code: doctor.code })"
-                            class="rounded-md bg-green-600 px-3 py-2 text-white"
+                            class="rounded-md bg-primary px-3 py-2 text-white"
                             v-bind:key="doctor.id"
                         >
                             Book Now

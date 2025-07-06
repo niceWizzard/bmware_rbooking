@@ -18,7 +18,7 @@ defineProps<{
                 <h3 class="text-lg font-bold">Doctors</h3>
                 <Link
                     :href="route('doctor.create')"
-                    class="rounded-md bg-green-500 px-3 py-2 text-white"
+                    class="bg-primary rounded-md px-3 py-2 text-white"
                     >Create</Link
                 >
             </div>
@@ -45,7 +45,7 @@ defineProps<{
                                 />
                                 <Link
                                     :href="route('schedule.edit', doctor.id)"
-                                    class="rounded-md bg-green-500 px-3 py-2 text-white"
+                                    class="bg-primary rounded-md px-3 py-2 text-white"
                                     >Edit Schedule</Link
                                 >
                                 <Link
@@ -54,14 +54,14 @@ defineProps<{
                                             code: doctor.code,
                                         })
                                     "
-                                    class="rounded-md bg-green-700 px-3 py-2 text-white"
+                                    class="bg-highlight rounded-md px-3 py-2"
                                     >See Appointments</Link
                                 >
                             </template>
                             <Link
                                 :href="route('schedule.create', doctor.id)"
                                 v-else
-                                class="rounded-md bg-green-600 px-3 py-2 text-white"
+                                class="bg-primary rounded-md px-3 py-2 text-white"
                                 >Create Schedule</Link
                             >
                         </div>

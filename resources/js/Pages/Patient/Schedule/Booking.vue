@@ -152,7 +152,7 @@ async function onDelete(
                 <div class="flex gap-4">
                     <Link
                         :href="route('patient.doctors')"
-                        class="flex items-center gap-3 rounded-md bg-green-600 px-3 py-2 text-white"
+                        class="flex items-center gap-3 rounded-md bg-primary px-3 py-2 text-white"
                     >
                         <i class="pi pi-arrow-right-arrow-left"></i>
                         Change Doctors</Link

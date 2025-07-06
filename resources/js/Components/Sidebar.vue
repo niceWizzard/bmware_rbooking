@@ -43,14 +43,14 @@ function logout() {
 
 <template>
     <aside
-        class="fixed left-0 top-0 flex h-screen w-[14rem] flex-col items-center justify-between bg-green-500 py-6"
+        class="fixed left-0 top-0 flex h-screen w-[14rem] flex-col items-center justify-between bg-primary py-6"
     >
         <h3 class="text-xl font-semibold text-white">Booking</h3>
         <nav class="mt-8 flex w-full flex-1 flex-col">
             <Link
                 v-for="link in navLinks"
                 :href="link.link"
-                class="w-full px-3 py-2 text-center text-white hover:bg-green-600"
+                class="w-full px-3 py-2 text-center text-white hover:bg-primary"
                 v-bind:key="link.link"
             >
                 {{ link.text }}
