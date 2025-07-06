@@ -65,10 +65,18 @@ class DoctorScheduleController extends Controller
         if(!$doctor->schedules()->exists()) {
             return redirect()->route('doctor.list');
         }
-
+        $slots = $doctor->schedules->map(fn (DoctorSchedule $s) => [
+            'id' => $s->id,
+            'clinic' => $s->clinic,
+            'start' => $s->start_at,
+            'end' => $s->end_at,
+            'title' => $s->clinic,
+            'day' => $s->day,
+        ]);
         return Inertia::render('Admin/Doctor/ViewSchedule', [
             'doctor' => $doctor,
-            'schedules' => $doctor->schedules->map(fn ($s) => $s->only(['id', 'day', 'start_at', 'end_at', 'clinic'])),
+            'slots' => $slots,
+            'range' => $doctor->getScheduleTimeRange(),
         ]);
     }
 
