@@ -15,7 +15,6 @@ class DashboardController extends Controller
 {
     public function index(Request $request) {
         $code = $request->query('code');
-        \Auth::user()->load('patient');
 
         if(is_null($code)) {
             $code = Cookie::get('doctorCode');
@@ -31,7 +30,6 @@ class DashboardController extends Controller
         Cookie::queue(Cookie::make('doctorCode', $doctor->code, 24 * 60 * 7));
 
         $slots = self::getAppointmentSlots($doctor);
-        Auth::user()->load('admin');
         $clinicCounts = DB::table('appointments')
             ->join('booking_appointment_details', 'appointments.id', '=', 'booking_appointment_details.appointment_id')
             ->where('booking_appointment_details.doctor_id', $doctor->id)

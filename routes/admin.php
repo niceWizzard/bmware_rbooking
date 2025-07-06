@@ -31,12 +31,10 @@ Route::middleware(['auth', 'only.admin'])
     });
 
     Route::get('/create', static function () {
-        Auth::user()->load('admin');
         return Inertia::render('Admin/Doctor/DoctorCreate');
     })->name('.create');
 
     Route::get('/', static function () {
-        Auth::user()->load('admin');
         $doctors = Doctor::withExists('schedules')->get();
         return Inertia::render('Admin/Doctor/DoctorList', [
             'doctors' => $doctors,

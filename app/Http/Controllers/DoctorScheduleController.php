@@ -25,7 +25,6 @@ class DoctorScheduleController extends Controller
             return redirect(route('patient.dashboard'));
         }
 
-        Auth::user()->load('admin');
         return Inertia::render('Admin/CreateSchedule',  [
             'doctor' => $doctor,
         ]);
@@ -60,7 +59,6 @@ class DoctorScheduleController extends Controller
     public function view(string $id)
     {
         $doctor = Doctor::findOrFail($id);
-        Auth::user()->load('admin');
 
         if(!$doctor->schedules()->exists()) {
             return redirect()->route('doctor.list');
@@ -82,7 +80,6 @@ class DoctorScheduleController extends Controller
 
     public function edit(string $id) {
         $doctor = Doctor::findOrFail($id);
-        Auth::user()->load('admin');
 
         if(!$doctor->schedules()->exists()) {
             return redirect()->route('doctor.list');

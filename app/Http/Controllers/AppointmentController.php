@@ -35,7 +35,6 @@ class AppointmentController extends Controller
     }
 
     public function showChangeTime(string $id) {
-        Auth::user()->load('patient');
         $appointment = Appointment::findOrFail($id);
         $doctor = $appointment->details->doctor;
         $slots = self::getChangeTimeSlots($appointment);

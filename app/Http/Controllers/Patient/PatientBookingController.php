@@ -29,7 +29,6 @@ class PatientBookingController extends Controller
     public function showBooking(Request $request)
     {
         $code = $request->query('code');
-        \Auth::user()->load('patient');
 
         if(is_null($code)) {
             $code = Cookie::get('doctorCode');
@@ -73,8 +72,6 @@ class PatientBookingController extends Controller
         }
         $doctor = Doctor::whereCode($code)->first();
         $user = Auth::user();
-
-        $user->load('patient');
 
         if(is_null($doctor)) {
             return \response()->json([
