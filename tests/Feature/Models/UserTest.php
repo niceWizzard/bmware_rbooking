@@ -27,7 +27,7 @@ test('user has is<role> attributes', function () {
 test('user getDashboardLink works', function () {
     $user = User::factory()->withPatient()->create();
     $this->assertEquals(
-        route('patient.dashboard'),
+        route('patient.book'),
         $user->getDashboardLink(),
     );
 

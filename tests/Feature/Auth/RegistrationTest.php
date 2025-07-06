@@ -23,7 +23,7 @@ test('new users can register', function () {
         'mobile' => '09493203939'
     ]);
     $this->assertAuthenticated();
-    $response->assertRedirect(route('patient.dashboard'));
+    $response->assertRedirect(route('patient.book'));
 });
 
 test('new users have patient', function () {
