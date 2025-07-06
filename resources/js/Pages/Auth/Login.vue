@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Button from 'primevue/button'
-import CardLayout from '@/Layouts/CardLayout.vue'
-import {Head, useForm} from "@inertiajs/vue3";
-import Input from '@/Components/Input.vue'
+import Input from '@/Components/Input.vue';
+import CardLayout from '@/Layouts/CardLayout.vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import Button from 'primevue/button';
 
 const form = useForm({
     email: '',
@@ -10,22 +10,18 @@ const form = useForm({
 });
 
 function onFormSubmit() {
-    form.post(route('login'))
+    form.post(route('login'));
 }
-
 </script>
 
 <template>
-    <Head title="Login"/>
+    <Head title="Login" />
     <CardLayout class="w-full">
         <Head title="Login" />
         <template #header>
-            <h3 class="text-2xl font-bold text-center">
-                Login
-            </h3>
+            <h3 class="text-center text-2xl font-bold">Login</h3>
         </template>
-        <form @submit.prevent="onFormSubmit"
-              class="w-96 flex flex-col gap-4">
+        <form @submit.prevent="onFormSubmit" class="flex w-96 flex-col gap-4">
             <Input
                 :error="form.errors.email"
                 id="email"
@@ -42,13 +38,12 @@ function onFormSubmit() {
                 v-model="form.password"
             />
 
-            <Button
-                type="submit"
-                label="Login"
-                :loading="form.processing"
-            />
-            <p class=" font-light text-center">
-                Don't have an account? <Link :href="route('register')" class="font-medium text-primary">Register</Link>
+            <Button type="submit" label="Login" :loading="form.processing" />
+            <p class="text-center font-light">
+                Don't have an account?
+                <Link :href="route('register')" class="text-primary font-medium"
+                    >Register</Link
+                >
             </p>
         </form>
     </CardLayout>

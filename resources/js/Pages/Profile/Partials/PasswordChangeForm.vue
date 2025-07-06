@@ -1,12 +1,12 @@
 <script setup>
-import {useForm, usePage} from "@inertiajs/vue3";
 import Input from '@/Components/Input.vue';
+import { useForm } from '@inertiajs/vue3';
 import Button from 'primevue/button';
 
 const form = useForm({
-    current_password : '' ,
+    current_password: '',
     password: '',
-    password_confirmation : '',
+    password_confirmation: '',
 });
 
 function submit() {
@@ -25,15 +25,13 @@ function submit() {
                 currentPasswordInput.value?.focus();
             }
         },
-    })
+    });
 }
-
 </script>
-
 
 <template>
     <form
-        class="flex container mx-auto flex-col gap-4 p-4 rounded-md shadow-sm border border-gray-200 w-full h-lg"
+        class="h-lg container mx-auto flex w-full flex-col gap-4 rounded-md border border-gray-200 p-4 shadow-sm"
         @submit.prevent="submit"
     >
         <h3 class="text-lg">Profile Information</h3>
@@ -64,10 +62,11 @@ function submit() {
             :error="form.errors.password_confirmation"
             type="password"
         />
-        <Button type="submit"
-                label="Save"
-                class="w-fit self-start"
-                :loading="form.processing"
+        <Button
+            type="submit"
+            label="Save"
+            class="w-fit self-start"
+            :loading="form.processing"
         />
         <Transition
             enter-active-class="transition ease-in-out"
@@ -75,10 +74,7 @@ function submit() {
             leave-active-class="transition ease-in-out"
             leave-to-class="opacity-0"
         >
-            <p
-                v-if="form.recentlySuccessful"
-                class="text-sm text-gray-600"
-            >
+            <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">
                 Saved.
             </p>
         </Transition>

@@ -1,81 +1,84 @@
 <script setup lang="ts">
-    import {Doctor} from "@/types";
-    import AuthLayout from "@/Layouts/AuthLayout.vue";
-    import FullCalendar from "@fullcalendar/vue3";
-    import {CalendarOptions, EventApi} from "@fullcalendar/core";
-    import timeGridPlugin from "@fullcalendar/timegrid";
-    import {Link, Head} from "@inertiajs/vue3";
-    import {onMounted, reactive, ref} from "vue";
-    import BookSlotDialog from "@/Components/Schedule/BookSlotDialog.vue";
-    import axios from "axios";
-    import {useToast} from "primevue";
-    import dayjs from "dayjs";
-    import {useQuery} from "@tanstack/vue-query";
+import BookSlotDialog from '@/Components/Schedule/BookSlotDialog.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
+import { Doctor } from '@/types';
+import { CalendarOptions, EventApi } from '@fullcalendar/core';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import FullCalendar from '@fullcalendar/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import { useQuery } from '@tanstack/vue-query';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import { useToast } from 'primevue';
+import { reactive, ref } from 'vue';
 
-    const toast = useToast();
-    const props = defineProps<{
-        invalid: boolean,
-        doctor: Doctor,
-        slots: any,
-        hiddenDays: number[],
-        timeRange: [string, string],
-        dateRange: [string, string],
-    }>();
+const toast = useToast();
+const props = defineProps<{
+    invalid: boolean;
+    doctor: Doctor;
+    slots: any;
+    hiddenDays: number[];
+    timeRange: [string, string];
+    dateRange: [string, string];
+}>();
 
-    const bookSlotDialogRef = ref<InstanceType<typeof BookSlotDialog>>();
-    const calendarRef = ref<InstanceType<typeof FullCalendar>>();
-    const {data: fetchedSlots, refetch: refetchSlots} = useQuery({
-        queryKey: ['bookingSlots'],
-        refetchInterval: 2000,
-        initialData: props.slots,
-        queryFn: async () => {
-            try {
-                const res = await axios.get(route('patient.book.fetch', { code: props.doctor!.code }));
-                if (!res.data.success)
-                    throw new Error(res.data.message);
-                return res.data.slots;
-            } catch (error: unknown) {
-                const err = error as Error;
-                toast.add({
-                    severity: 'error',
-                    summary: 'An error occurred while fetching bookings',
-                    detail: err.message,
-                });
-                return [];
-            }
-        },
-    })
-    const calendarOptions = reactive<CalendarOptions>({
-        plugins: [timeGridPlugin],
-        initialView: 'timeGridWeek',
-        allDaySlot: false,
-        nowIndicator: false,
-        stickyFooterScrollbar: true,
-        slotDuration: '00:60:00',
-        dayHeaderFormat: { weekday: 'long' },
-        height: '100vh',
-        stickyHeaderDates: true,
-        firstDay: (new Date()).getDay(),
-        timeZone: 'utc',
-        hiddenDays:  props.hiddenDays,
-        slotMinTime: props.timeRange[0],
-        slotMaxTime: props.timeRange[1],
-        validRange: {
-            start: props.dateRange[0],
-            end: props.dateRange[1],
-        },
-        events: fetchedSlots as any,
-        eventClick (info) {
-            bookSlotDialogRef.value?.setSlot(info.event);
-        },
-    })
+const bookSlotDialogRef = ref<InstanceType<typeof BookSlotDialog>>();
+const calendarRef = ref<InstanceType<typeof FullCalendar>>();
+const { data: fetchedSlots, refetch: refetchSlots } = useQuery({
+    queryKey: ['bookingSlots'],
+    refetchInterval: 2000,
+    initialData: props.slots,
+    queryFn: async () => {
+        try {
+            const res = await axios.get(
+                route('patient.book.fetch', { code: props.doctor!.code }),
+            );
+            if (!res.data.success) throw new Error(res.data.message);
+            return res.data.slots;
+        } catch (error: unknown) {
+            const err = error as Error;
+            toast.add({
+                severity: 'error',
+                summary: 'An error occurred while fetching bookings',
+                detail: err.message,
+            });
+            return [];
+        }
+    },
+});
+const calendarOptions = reactive<CalendarOptions>({
+    plugins: [timeGridPlugin],
+    initialView: 'timeGridWeek',
+    allDaySlot: false,
+    nowIndicator: false,
+    stickyFooterScrollbar: true,
+    slotDuration: '00:60:00',
+    dayHeaderFormat: { weekday: 'long' },
+    height: '100vh',
+    stickyHeaderDates: true,
+    firstDay: new Date().getDay(),
+    timeZone: 'utc',
+    hiddenDays: props.hiddenDays,
+    slotMinTime: props.timeRange[0],
+    slotMaxTime: props.timeRange[1],
+    validRange: {
+        start: props.dateRange[0],
+        end: props.dateRange[1],
+    },
+    events: fetchedSlots as any,
+    eventClick(info) {
+        bookSlotDialogRef.value?.setSlot(info.event);
+    },
+});
 
-    function onSubmit(slot : EventApi, setIsLoading: (value: boolean) => void) {
-        axios.post(route('patient.book'), {
+function onSubmit(slot: EventApi, setIsLoading: (value: boolean) => void) {
+    axios
+        .post(route('patient.book'), {
             date: dayjs.utc(slot.start).utc().format('YYYY-MM-DD HH:mm:ss'),
             code: props.doctor!.code,
-        }).then(response => {
-            if(!response.data.success) {
+        })
+        .then((response) => {
+            if (!response.data.success) {
                 toast.add({
                     severity: 'error',
                     summary: response.data.message,
@@ -87,71 +90,82 @@
                 severity: 'success',
                 summary: 'Booked successfully',
                 life: 3000,
-            })
-        }).catch(err => {
+            });
+        })
+        .catch((err) => {
             toast.add({
                 severity: 'error',
-                summary: "Something went wrong.",
+                summary: 'Something went wrong.',
                 detail: err.message,
-            })
+            });
         })
-            .finally(() => {
+        .finally(() => {
             setIsLoading(false);
             bookSlotDialogRef.value?.setSlot(null);
             refetchSlots();
         });
-    }
+}
 
-
-    async function onDelete(slot: EventApi, setIsLoading: (value: boolean) => void) {
-        try {
-            const res = await axios.delete(route('patient.appointment.delete', slot.id));
-            if(res.data.succes) {
-                throw new Error(res.data.message);
-            }
-            toast.add({
-                severity: 'success',
-                summary: 'Cancelled successfully',
-                life: 3000,
-            })
-            bookSlotDialogRef.value?.setSlot(null);
-        } catch(e) {
-            const err = e as Error;
-            toast.add({
-                severity: 'error',
-                summary: 'Something went wrong while cancelling the appointment',
-                detail: err.message,
-                life: 3000,
-            })
-        } finally {
-            setIsLoading(false);
-            refetchSlots();
+async function onDelete(
+    slot: EventApi,
+    setIsLoading: (value: boolean) => void,
+) {
+    try {
+        const res = await axios.delete(
+            route('patient.appointment.delete', slot.id),
+        );
+        if (res.data.succes) {
+            throw new Error(res.data.message);
         }
+        toast.add({
+            severity: 'success',
+            summary: 'Cancelled successfully',
+            life: 3000,
+        });
+        bookSlotDialogRef.value?.setSlot(null);
+    } catch (e) {
+        const err = e as Error;
+        toast.add({
+            severity: 'error',
+            summary: 'Something went wrong while cancelling the appointment',
+            detail: err.message,
+            life: 3000,
+        });
+    } finally {
+        setIsLoading(false);
+        await refetchSlots();
     }
-
-
+}
 </script>
 <template>
     <Head title="Book an Appointment" />
-    <AuthLayout header-title="Booking" >
-        <BookSlotDialog  :doctor="doctor" :on-submit="onSubmit" :on-delete="onDelete" ref="bookSlotDialogRef"/>
-        <section class="p-8 flex flex-col gap-4 " v-if="!invalid">
+    <AuthLayout header-title="Booking">
+        <BookSlotDialog
+            :doctor="doctor"
+            :on-submit="onSubmit"
+            :on-delete="onDelete"
+            ref="bookSlotDialogRef"
+        />
+        <section class="flex flex-col gap-4 p-8" v-if="!invalid">
             <div class="flex justify-between">
-                <h3 class="text-2xl font-medium"> Dr. {{doctor!.name}}</h3>
+                <h3 class="text-2xl font-medium">Dr. {{ doctor!.name }}</h3>
                 <div class="flex gap-4">
-                    <Link :href="route('patient.doctors')"
-                          class="px-3 py-2 rounded-md bg-green-600 text-white flex items-center gap-3" >
+                    <Link
+                        :href="route('patient.doctors')"
+                        class="flex items-center gap-3 rounded-md bg-green-600 px-3 py-2 text-white"
+                    >
                         <i class="pi pi-arrow-right-arrow-left"></i>
-                        Change Doctors</Link>
+                        Change Doctors</Link
+                    >
                 </div>
             </div>
-            <div class="flex-1 ">
-                <FullCalendar  ref="calendarRef" :options="calendarOptions" />
+            <div class="flex-1">
+                <FullCalendar ref="calendarRef" :options="calendarOptions" />
             </div>
         </section>
     </AuthLayout>
 </template>
-<style >
+<style>
 .fc-timegrid-slot {
     height: 48px !important;
 }

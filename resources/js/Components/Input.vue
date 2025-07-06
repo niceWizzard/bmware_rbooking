@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import InputText from 'primevue/inputtext'
-import FloatLabel from 'primevue/floatlabel'
+import FloatLabel from 'primevue/floatlabel';
+import InputText from 'primevue/inputtext';
+import { computed } from 'vue';
 
 const props = defineProps<{
-    id: string
-    label: string
-    type?: string
-    error?: string
-    autocomplete?: string
-}>()
+    id: string;
+    label: string;
+    type?: string;
+    error?: string;
+    autocomplete?: string;
+}>();
 
 const model = defineModel<string>();
 
-const inputId = computed(() => props.id || props.label.toLowerCase().replace(/\s+/g, '_'))
+const inputId = computed(
+    () => props.id || props.label.toLowerCase().replace(/\s+/g, '_'),
+);
 </script>
 
 <template>

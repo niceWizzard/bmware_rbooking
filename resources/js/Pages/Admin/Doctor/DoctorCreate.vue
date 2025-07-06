@@ -1,10 +1,8 @@
 <script setup lang="ts">
-
-import AuthLayout from "@/Layouts/AuthLayout.vue";
+import Input from '@/Components/Input.vue';
+import AuthLayout from '@/Layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import Input from '@/Components/Input.vue'
 import Button from 'primevue/button';
-
 
 const form = useForm({
     name: '',
@@ -15,19 +13,16 @@ const form = useForm({
 function onSubmit() {
     form.post(route('doctor.create'));
 }
-
 </script>
 
 <template>
     <Head title="Create a doctor" />
-    <AuthLayout headerTitle="Create Doctor" >
-        <section class="p-8 flex flex-col gap-4 items-center">
-            <h3 class="text-lg font-medium">
-                Create a New Doctor
-            </h3>
+    <AuthLayout headerTitle="Create Doctor">
+        <section class="flex flex-col items-center gap-4 p-8">
+            <h3 class="text-lg font-medium">Create a New Doctor</h3>
             <form
                 @submit.prevent="onSubmit"
-                class="flex flex-col gap-4 max-w-xl mx-auto w-full"
+                class="mx-auto flex w-full max-w-xl flex-col gap-4"
                 method="post"
             >
                 <Input
@@ -48,11 +43,9 @@ function onSubmit() {
                     :error="form.errors.specialty"
                     v-model="form.specialty"
                 />
+                <Button label="Cancel" severity="secondary" />
                 <Button
-                    label="Cancel"
-                    severity="secondary"
-                />
-                <Button type="submit"
+                    type="submit"
                     label="Create"
                     :loading="form.processing"
                 />
@@ -60,4 +53,3 @@ function onSubmit() {
         </section>
     </AuthLayout>
 </template>
-

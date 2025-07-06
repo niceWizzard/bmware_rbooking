@@ -1,23 +1,25 @@
-export type User = {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at?: string;
-    role: 'admin';
-    admin: {
-        name: string;
-    }
-} | {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at?: string;
-    role: 'patient';
-    patient: {
-        first_name: string;
-        last_name: string;
-    }
-}
+export type User =
+    | {
+          id: number;
+          name: string;
+          email: string;
+          email_verified_at?: string;
+          role: 'admin';
+          admin: {
+              name: string;
+          };
+      }
+    | {
+          id: number;
+          name: string;
+          email: string;
+          email_verified_at?: string;
+          role: 'patient';
+          patient: {
+              first_name: string;
+              last_name: string;
+          };
+      };
 
 export interface Doctor {
     id: number;
@@ -43,5 +45,5 @@ export type PageProps<
     };
     flash?: {
         message: string;
-    }
+    };
 };

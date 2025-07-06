@@ -1,24 +1,23 @@
 import '../css/app.css';
 import './bootstrap';
 
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 import { createInertiaApp, Link } from '@inertiajs/vue3';
+import Aura from '@primeuix/themes/aura';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import 'primeicons/primeicons.css';
 import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
-import Aura from '@primeuix/themes/aura';
-import "primeicons/primeicons.css";
 
+import { VueQueryPlugin } from '@tanstack/vue-query';
 import PrimeVue from 'primevue/config';
-import ToastService from "primevue/toastservice";
-import ConfirmationService from "primevue/confirmationservice";
-import {VueQueryPlugin} from "@tanstack/vue-query";
-
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Patient Booking';
 
@@ -36,9 +35,9 @@ createInertiaApp({
                 theme: {
                     preset: Aura,
                     options: {
-                        darkModeSelector: false || 'none',
+                        darkModeSelector: 'none',
                     },
-                }
+                },
             })
             .use(ZiggyVue)
             .use(ToastService)

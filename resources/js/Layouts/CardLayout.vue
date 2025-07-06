@@ -1,14 +1,17 @@
 <script setup lang="ts">
 defineProps<{
-    header?: string
-}>()
+    header?: string;
+}>();
 </script>
 
 <template>
-    <main class="w-full min-h-screen grid place-items-center">
-        <section class="rounded-2xl border bg-white shadow-sm p-6">
+    <main class="grid min-h-screen w-full place-items-center">
+        <section class="rounded-2xl border bg-white p-6 shadow-sm">
             <!-- Check for named slot 'header' first, then fallback to prop -->
-            <div v-if="$slots.header || header" class="mb-4 text-xl font-semibold">
+            <div
+                v-if="$slots.header || header"
+                class="mb-4 text-xl font-semibold"
+            >
                 <slot name="header">
                     {{ header }}
                 </slot>

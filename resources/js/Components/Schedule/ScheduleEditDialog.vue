@@ -1,39 +1,37 @@
-
 <script setup lang="ts">
-import InputText from "primevue/inputtext";
-import Dialog from "primevue/dialog";
-import Button from "primevue/button";
-import DatePicker from "primevue/datepicker";
-import {EventApi} from "@fullcalendar/core";
-import {computed, reactive, watch, watchEffect} from "vue";
-import dayjs from "dayjs";
-import axios from "axios";
+import { EventApi } from '@fullcalendar/core';
+import dayjs from 'dayjs';
+import Button from 'primevue/button';
+import DatePicker from 'primevue/datepicker';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
+import { computed, reactive, watch, watchEffect } from 'vue';
 
 const selectedEvent = defineModel<EventApi | null>();
 
 const now = dayjs().minute(0).second(0);
 const data = reactive({
-    clinic : '',
-    start:  now.toDate(),
-    end: now.add(1, "h").toDate(),
-})
+    clinic: '',
+    start: now.toDate(),
+    end: now.add(1, 'h').toDate(),
+});
 
 const visible = computed({
     get: () => selectedEvent.value != null,
     set: (val: boolean) => {
         if (!val) selectedEvent.value = null;
-    }
+    },
 });
-
 
 watch(selectedEvent, (event) => {
     if (event) {
-        data.clinic = event.extendedProps.clinic ?? "";
+        data.clinic = event.extendedProps.clinic ?? '';
         data.start = event.start ? new Date(event.start) : new Date();
-        data.end = event.end ? new Date(event.end) : dayjs(data.start).add(1, "hour").toDate();
+        data.end = event.end
+            ? new Date(event.end)
+            : dayjs(data.start).add(1, 'hour').toDate();
     }
 });
-
 
 watchEffect(() => {
     const start = dayjs(data.start);
@@ -48,11 +46,8 @@ watchEffect(() => {
     }
 });
 
-
-
-
 function save() {
-    if(selectedEvent.value) {
+    if (selectedEvent.value) {
         const eventDay = dayjs(selectedEvent.value.start);
         selectedEvent.value.setExtendedProp('clinic', data.clinic);
         selectedEvent.value.setStart(
@@ -66,16 +61,16 @@ function save() {
 }
 
 function removeEvent() {
-    if(selectedEvent.value) {
+    if (selectedEvent.value) {
         selectedEvent.value.remove();
         visible.value = false;
     }
 }
 
-const isInvalidData = computed(() => !data.clinic || dayjs(data.start).isSame(data.end));
-
+const isInvalidData = computed(
+    () => !data.clinic || dayjs(data.start).isSame(data.end),
+);
 </script>
-
 
 <template>
     <Dialog
@@ -84,15 +79,12 @@ const isInvalidData = computed(() => !data.clinic || dayjs(data.start).isSame(da
         header="Edit Schedule"
         :style="{ width: '25rem' }"
     >
-    <span class="text-surface-500 dark:text-surface-400 block mb-8">
-        Update the information.
-    </span>
-        <form
-        @submit.prevent="save"
-        class="flex gap-4 flex-col"
-        >
+        <span class="text-surface-500 dark:text-surface-400 mb-8 block">
+            Update the information.
+        </span>
+        <form @submit.prevent="save" class="flex flex-col gap-4">
             <div class="flex items-center gap-4">
-                <label for="clinic" class="font-semibold w-24">Clinic</label>
+                <label for="clinic" class="w-24 font-semibold">Clinic</label>
                 <InputText
                     id="clinic"
                     class="flex-auto"
@@ -102,15 +94,14 @@ const isInvalidData = computed(() => !data.clinic || dayjs(data.start).isSame(da
                 />
             </div>
             <div class="flex items-center gap-4">
-                <label for="clinic" class="font-semibold w-24">Start</label>
+                <label for="clinic" class="w-24 font-semibold">Start</label>
                 <DatePicker
                     time-only
                     v-model="data.start"
                     :step-minute="60"
                     hour-format="12"
-
                 />
-                <label for="clinic" class="font-semibold w-24">End</label>
+                <label for="clinic" class="w-24 font-semibold">End</label>
                 <DatePicker
                     time-only
                     v-model="data.end"
@@ -120,13 +111,20 @@ const isInvalidData = computed(() => !data.clinic || dayjs(data.start).isSame(da
             </div>
 
             <div class="flex justify-end gap-2">
-                <Button type="button" severity="danger" label="Remove" @click="removeEvent" />
-                <Button type="button" label="Cancel" severity="secondary" @click="visible = false" />
-                <Button type="submit" label="Save"
-                        :disabled="isInvalidData"
+                <Button
+                    type="button"
+                    severity="danger"
+                    label="Remove"
+                    @click="removeEvent"
                 />
+                <Button
+                    type="button"
+                    label="Cancel"
+                    severity="secondary"
+                    @click="visible = false"
+                />
+                <Button type="submit" label="Save" :disabled="isInvalidData" />
             </div>
         </form>
     </Dialog>
 </template>
-

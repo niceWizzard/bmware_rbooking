@@ -1,75 +1,83 @@
 <script setup lang="ts">
-    import {ref} from "vue";
-    import Button from 'primevue/button'
-    import Popover from 'primevue/popover'
-    import {Link, router, usePage} from "@inertiajs/vue3";
+import { Link, router, usePage } from '@inertiajs/vue3';
+import Button from 'primevue/button';
+import Popover from 'primevue/popover';
+import { ref } from 'vue';
 
-    const loggingOut = ref(false);
-    const {props} = usePage();
-    const {user} = props.auth;
-    const navLinks = user!.role === 'patient' ? [
-        {
-            text: 'Book',
-            link: route('patient.book'),
-        },
-        {
-            text: "Doctors",
-            link: route('patient.doctors'),
-        }
+const loggingOut = ref(false);
+const { props } = usePage();
+const { user } = props.auth;
+const navLinks =
+    user!.role === 'patient'
+        ? [
+              {
+                  text: 'Book',
+                  link: route('patient.book'),
+              },
+              {
+                  text: 'Doctors',
+                  link: route('patient.doctors'),
+              },
+          ]
+        : [
+              {
+                  text: 'Dashboard',
+                  link: route('admin.dashboard'),
+              },
+              {
+                  text: 'Doctors',
+                  link: route('doctor.list'),
+              },
+          ];
 
-    ] : [
-        {
-            text: 'Dashboard',
-            link: route('admin.dashboard'),
-        },{
-            text: 'Doctors',
-            link: route('doctor.list'),
-        }
-    ];
+const overlayRef = ref();
 
-
-    const overlayRef = ref()
-
-    function toggle(event: Event) {
-        overlayRef.value.toggle(event)
-    }
-    function logout() {
-        loggingOut.value = true;
-        router.post(route('logout'));
-    }
+function toggle(event: Event) {
+    overlayRef.value.toggle(event);
+}
+function logout() {
+    loggingOut.value = true;
+    router.post(route('logout'));
+}
 </script>
 
 <template>
-    <aside class="w-[14rem] fixed top-0 left-0 h-screen flex flex-col bg-green-500 py-6 items-center justify-between ">
-        <h3 class="text-white font-semibold text-xl">
-            Booking
-        </h3>
-        <nav class="flex flex-col w-full flex-1 mt-8">
+    <aside
+        class="fixed left-0 top-0 flex h-screen w-[14rem] flex-col items-center justify-between bg-green-500 py-6"
+    >
+        <h3 class="text-xl font-semibold text-white">Booking</h3>
+        <nav class="mt-8 flex w-full flex-1 flex-col">
             <Link
                 v-for="link in navLinks"
                 :href="link.link"
-                class="px-3 py-2 hover:bg-green-600 w-full text-center text-white"
+                class="w-full px-3 py-2 text-center text-white hover:bg-green-600"
+                v-bind:key="link.link"
             >
-                {{link.text}}
+                {{ link.text }}
             </Link>
         </nav>
         <div class="flex flex-col p-3">
             <Button
                 type="button"
                 icon="pi pi-user"
-                :label="user?.role === 'patient' ? user.patient.first_name : user?.admin.name"
+                :label="
+                    user?.role === 'patient'
+                        ? user.patient.first_name
+                        : user?.admin.name
+                "
                 @click="toggle"
                 aria-haspopup="true"
             />
             <Popover ref="overlayRef">
-                <ul class="flex flex-col gap-2 min-w-[160px]">
-                    <Link :href="route('profile.edit')"
-                          class="px-4 py-2 hover:bg-gray-100 cursor-pointer pl-6"
+                <ul class="flex min-w-[160px] flex-col gap-2">
+                    <Link
+                        :href="route('profile.edit')"
+                        class="cursor-pointer px-4 py-2 pl-6 hover:bg-gray-100"
                     >
                         Profile
                     </Link>
 
-                    <li class="border-t my-1"></li>
+                    <li class="my-1 border-t"></li>
                     <Button
                         @click="logout"
                         :loading="loggingOut"
@@ -81,7 +89,5 @@
                 </ul>
             </Popover>
         </div>
-
     </aside>
 </template>
-
