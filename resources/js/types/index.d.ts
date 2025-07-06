@@ -1,25 +1,29 @@
-export type User =
+export type User = {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at?: string;
+} & (
     | {
-          id: number;
-          name: string;
-          email: string;
-          email_verified_at?: string;
           role: 'admin';
-          admin: {
-              name: string;
-          };
+          admin: Admin;
       }
     | {
-          id: number;
-          name: string;
-          email: string;
-          email_verified_at?: string;
           role: 'patient';
-          patient: {
-              first_name: string;
-              last_name: string;
-          };
-      };
+          patient: Patient;
+      }
+);
+
+export interface UserPatient {
+    id: number;
+    first_name: string;
+    last_name: string;
+}
+
+export interface UserAdmin {
+    id: number;
+    name: string;
+}
 
 export interface Doctor {
     id: number;
