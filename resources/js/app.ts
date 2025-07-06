@@ -20,7 +20,7 @@ import ConfirmationService from "primevue/confirmationservice";
 import {VueQueryPlugin} from "@tanstack/vue-query";
 
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Patient Booking';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
