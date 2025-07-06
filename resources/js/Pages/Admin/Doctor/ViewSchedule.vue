@@ -65,7 +65,6 @@ const calendarOptions: CalendarOptions = {
     <Head :title="`Schedule of ${doctor.name}`" />
     <AuthLayout headerTitle="Schedule">
         <section class="flex flex-col p-8">
-            {{ schedules }}
             <div class="flex items-center justify-between gap-2">
                 <h3 class="text-lg font-medium">Dr. {{ doctor.name }}</h3>
                 <div class="flex gap-4">
