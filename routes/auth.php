@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\LoginController;
@@ -31,16 +32,18 @@ Route::middleware(['guest'])->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
+    Route::controller(EmailVerificationController::class)->group(function() {
+        Route::get('verify-email', 'prompt')
+            ->name('verification.notice');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
+        Route::get('verify-email/{id}/{hash}', 'verify')
+            ->middleware(['signed', 'throttle:6,1'])
+            ->name('verification.verify');
 
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
+        Route::post('verify-email/notification', 'sendEmail')
+            ->middleware('throttle:6,1')
+            ->name('verification.send');
+    });
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
