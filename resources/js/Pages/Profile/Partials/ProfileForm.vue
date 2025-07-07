@@ -14,7 +14,9 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(route('profile.update'));
+    form.post(route('profile.update'),{
+        preserveScroll: true,
+    });
 }
 </script>
 

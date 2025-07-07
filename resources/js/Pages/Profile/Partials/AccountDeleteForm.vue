@@ -8,7 +8,9 @@ const form = useForm({
 });
 
 function submit() {
-    form.delete(route('profile.destroy'));
+    form.delete(route('profile.destroy'), {
+        preserveScroll: true,
+    });
 }
 </script>
 
