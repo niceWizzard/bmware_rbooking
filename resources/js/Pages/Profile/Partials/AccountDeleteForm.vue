@@ -26,7 +26,7 @@ function submit() {
         <Input
             v-model="form.password"
             name="password"
-            id="password"
+            id="del_password"
             label="Password"
             :error="form.errors.password"
         />
