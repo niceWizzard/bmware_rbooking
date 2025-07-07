@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\OnlyAdmin;
 use App\Http\Middleware\OnlyPatient;
+use App\Http\Middleware\PatientVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'only.admin' => OnlyAdmin::class,
             'only.patient' => OnlyPatient::class,
+            'patient.verified' => PatientVerified::class,
         ]);
 
         //

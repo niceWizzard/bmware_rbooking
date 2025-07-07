@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('role', ['admin', 'patient'])->default('patient');
             $table->rememberToken();
             $table->timestamps();
+            $table->timestamp('patient_verified_at')->nullable();
             $table->foreignId('patient_id')->nullable()->constrained('patients');
         });
 
