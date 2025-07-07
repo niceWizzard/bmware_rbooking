@@ -41,10 +41,15 @@ function onFormSubmit() {
             <Button type="submit" label="Login" :loading="form.processing" />
             <p class="text-center font-light">
                 Don't have an account?
-                <Link :href="route('register')" class="text-primary font-medium"
+                <Link :href="route('register')" class="font-medium text-primary"
                     >Register</Link
                 >
             </p>
+            <Link
+                :href="route('password.request')"
+                class="text-center font-medium text-primary"
+                >Forgot Password?</Link
+            >
         </form>
     </CardLayout>
 </template>
