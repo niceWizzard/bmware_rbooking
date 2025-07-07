@@ -40,5 +40,6 @@ Route::prefix('/patient')
         ->withoutMiddleware('patient.verified')
     ->group(function () {
         Route::get('/', 'verifyPatient')->name('.index');
+        Route::post('/', 'verify')->name('.verify');
     });
 });

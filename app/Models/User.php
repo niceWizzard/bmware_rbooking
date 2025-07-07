@@ -96,4 +96,14 @@ class User extends Authenticatable implements MustVerifyEmail
         };
     }
 
+    public function isPatientVerified() : bool {
+        return !is_null($this->patient_verified_at);
+    }
+
+    public function verifyPatientRecord() : void {
+        $this->update([
+            'patient_verified_at' => now(),
+        ]);
+    }
+
 }
