@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\AdminInfoController;
 use App\Http\Controllers\DoctorScheduleController;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
@@ -12,6 +13,8 @@ Route::prefix('/admin')
     ->group(static function () {
         Route::get('/dashboard', [DashboardController::class,'index'])->name('.dashboard');
         Route::get('/dashboard/fetch', [DashboardController::class,'fetchAppointmentSlots'])->name('.dashboard.fetch');
+
+        Route::post('', [AdminInfoController::class, 'update'])->name('.profile');
     });
 
 Route::middleware(['auth', 'only.admin'])

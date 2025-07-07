@@ -12,6 +12,9 @@ class Admin extends Model
     /** @use HasFactory<\Database\Factories\AdminFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
 
     public function user() : HasOne {
         return  $this->hasOne(User::class);
