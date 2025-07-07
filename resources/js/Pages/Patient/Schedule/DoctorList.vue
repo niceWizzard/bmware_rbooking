@@ -47,7 +47,16 @@ function logout() {
                 v-bind:key="'Doctor-' + doctor.id"
             >
                 <template #title>
-                    {{ doctor.name }}
+                    <div class="flex items-center gap-4">
+                        <img
+                            :src="`/storage/${doctor.profile_picture}`"
+                            :alt="`Photo of Dr. ${doctor.name}`"
+                            class="h-16 w-16 rounded-full object-cover"
+                        />
+                        <p class="text-xl font-semibold">
+                            Dr. {{ doctor.name }}
+                        </p>
+                    </div>
                 </template>
                 <template #subtitle>Expertise: {{ doctor.specialty }}</template>
                 <template #content>
