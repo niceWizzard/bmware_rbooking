@@ -3,16 +3,19 @@ import Input from '@/Components/Input.vue';
 import { Patient } from '@/types';
 import { useForm } from '@inertiajs/vue3';
 import Button from 'primevue/button';
+import DatePicker from 'primevue/datepicker';
+import InputMask from 'primevue/inputmask';
+import Select from 'primevue/select';
 
 const { patient } = defineProps<{
     patient: Patient;
 }>();
 
-const form = useForm<Partial<Patient>>({
+const form = useForm({
     first_name: patient.first_name,
     middle_name: patient.middle_name ?? '',
     last_name: patient.last_name,
-    birthdate: patient.birthdate,
+    birthdate: new Date(patient.birthdate),
     gender: patient.gender,
     civil_status: patient.civil_status,
     height: patient.height ?? '',
@@ -27,7 +30,10 @@ const form = useForm<Partial<Patient>>({
 });
 
 function submit() {
-    form.post(route('patient.profile'), {
+    form.transform((v) => ({
+        ...v,
+        mobile: v.mobile?.replaceAll('-', ''),
+    })).post(route('patient.profile'), {
         preserveScroll: true,
     });
 }
@@ -60,28 +66,45 @@ function submit() {
                 :error="form.errors.last_name"
             />
         </div>
-        <Input
-            id="birth_date"
-            label="Birthdate"
-            v-model="form.birthdate"
-            class="max-w-xl"
-            :error="form.errors.birthdate"
-        />
+        <div class="flex max-w-xl flex-col">
+            <label
+                for="birth_date"
+                class="mb-1 text-sm font-medium text-gray-700"
+                >Birthdate</label
+            >
+            <DatePicker
+                id="birth_date"
+                v-model="form.birthdate"
+                showIcon
+                class="w-full"
+                :class="{ 'p-invalid': form.errors.birthdate }"
+                placeholder="Select birthdate"
+            />
+            <small v-if="form.errors.birthdate" class="p-error">
+                {{ form.errors.birthdate }}
+            </small>
+        </div>
         <div class="flex w-full flex-wrap gap-2">
-            <Input
+            <Select
                 id="gender"
-                label="Gender"
-                v-model="form.last_name"
-                class="max-w-xl"
-                :error="form.errors.last_name"
+                v-model="form.gender"
+                class="max-w-xs"
+                :options="['Male', 'Female']"
+                placeholder="Select Gender"
             />
-            <Input
+            <small v-if="form.errors.gender" class="p-error">{{
+                form.errors.gender
+            }}</small>
+            <Select
                 id="civil_status"
-                label="Civil Status"
-                v-model="form.last_name"
-                class="max-w-xl"
-                :error="form.errors.last_name"
+                v-model="form.civil_status"
+                class="max-w-xs"
+                :options="['Single', 'Married', 'Divorced']"
+                placeholder="Select Civil Status"
             />
+            <small v-if="form.errors.civil_status" class="p-error">{{
+                form.errors.civil_status
+            }}</small>
             <Input
                 id="height"
                 label="Height (cm)"
@@ -91,19 +114,23 @@ function submit() {
             />
             <Input
                 id="weight"
-                label="Weight (cm)"
+                label="Weight (kg)"
                 v-model="form.weight"
                 class="max-w-xl"
                 :error="form.errors.weight"
             />
         </div>
-        <Input
+        <InputMask
             id="mobile"
-            label="Mobile Number"
             v-model="form.mobile"
+            mask="0999-999-9999"
+            placeholder="09XX-XXX-XXXX"
             class="max-w-xl"
-            :error="form.errors.mobile"
+            :class="{ 'p-invalid': form.errors.mobile }"
         />
+        <small v-if="form.errors.mobile" class="p-error">{{
+            form.errors.mobile
+        }}</small>
         <Input
             id="telephone"
             label="Telephone"
@@ -112,7 +139,7 @@ function submit() {
             :error="form.errors.telephone"
         />
         <Input
-            id="addresss"
+            id="address"
             label="Address"
             v-model="form.address"
             class="max-w-xl"
@@ -149,7 +176,12 @@ function submit() {
                 :error="form.errors.guardian_address"
             />
         </div>
-        <Button type="submit" label="Save" class="w-fit self-start" />
+        <Button
+            type="submit"
+            label="Save"
+            class="w-fit self-start"
+            :loading="form.processing"
+        />
         <Transition
             enter-active-class="transition ease-in-out"
             enter-from-class="opacity-0"

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -32,6 +33,10 @@ class PatientInfoController extends Controller
             'relationship' => ['nullable', 'string', 'max:255'],
             'guardian_address' => ['nullable', 'string', 'max:255'],
         ]);
+
+        if($data['birthdate']) {
+            $data['birthdate'] = Carbon::parse($data['birthdate'])->toDateString();
+        }
 
         $user->patient->update($data);
 
