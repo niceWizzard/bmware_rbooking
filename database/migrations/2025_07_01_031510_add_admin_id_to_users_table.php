@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('booking_users', static function (Blueprint $table) {
             $table->foreignId('admin_id')
-                ->nullable()->constrained('booking_admins');
+                ->nullable()
+                ->constrained('booking_admins')
+                ->nullOnDelete();
         });
     }
 
