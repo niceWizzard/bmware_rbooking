@@ -36,6 +36,7 @@ function submit() {
             class="w-fit self-start"
             severity="danger"
             icon="pi pi-trash"
+            :loading="form.processing"
         />
     </form>
 </template>

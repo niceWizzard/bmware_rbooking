@@ -14,7 +14,7 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(route('profile.update'),{
+    form.post(route('profile.update'), {
         preserveScroll: true,
     });
 }
@@ -33,7 +33,12 @@ function submit() {
             class="max-w-xl"
             :error="form.errors.email"
         />
-        <Button type="submit" label="Save" class="w-fit self-start" />
+        <Button
+            type="submit"
+            label="Save"
+            class="w-fit self-start"
+            :loading="form.processing"
+        />
         <Transition
             enter-active-class="transition ease-in-out"
             enter-from-class="opacity-0"
