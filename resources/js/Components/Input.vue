@@ -11,7 +11,7 @@ const props = defineProps<{
     autocomplete?: string;
 }>();
 
-const model = defineModel<string>();
+const model = defineModel<string | null>();
 
 const inputId = computed(
     () => props.id || props.label.toLowerCase().replace(/\s+/g, '_'),
