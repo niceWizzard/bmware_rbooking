@@ -3,15 +3,22 @@ import Input from '@/Components/Input.vue';
 import AuthLayout from '@/Layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import Button from 'primevue/button';
-
+import FileUpload from 'primevue/fileupload';
 const form = useForm({
     name: '',
     code: '',
     specialty: '',
+    profile_picture: '',
 });
 
 function onSubmit() {
     form.post(route('doctor.create'));
+}
+
+function handleFileUpload(event: any) {
+    if (event.files && event.files.length > 0) {
+        form.profile_picture = event.files[0]; // Only grab the first file
+    }
 }
 </script>
 
@@ -25,6 +32,22 @@ function onSubmit() {
                 class="mx-auto flex w-full max-w-xl flex-col gap-4"
                 method="post"
             >
+                <div class="flex flex-col gap-2">
+                    <label>Doctor's Picture</label>
+                    <FileUpload
+                        mode="advanced"
+                        name="demo[]"
+                        accept="image/*"
+                        :maxFileSize="1000000"
+                        chooseLabel="Browse"
+                        @select="handleFileUpload"
+                        custom-upload
+                    >
+                        <template #empty>
+                            <span>Drag and drop files to here to upload.</span>
+                        </template>
+                    </FileUpload>
+                </div>
                 <Input
                     id="name"
                     label="Doctor's Name"

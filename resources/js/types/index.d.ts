@@ -31,6 +31,7 @@ export interface Doctor {
     code: string;
     specialty: string;
     schedules_exists: boolean;
+    profile_picture: string;
 }
 
 export interface Patient {

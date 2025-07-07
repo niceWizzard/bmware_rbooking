@@ -18,6 +18,7 @@ class Doctor extends Model
         'name',
         'specialty',
         'code',
+        'profile_picture',
     ];
 
 

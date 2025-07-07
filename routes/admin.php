@@ -27,9 +27,13 @@ Route::middleware(['auth', 'only.admin'])
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'unique:booking_doctors,code'],
             'specialty' => ['required', 'string'],
+            'profile_picture' => ['required', 'file', 'max:2048']
         ]);
-
-        $doctor = Doctor::create($data);
+        $path = $request->file('profile_picture')?->store('profile_pictures', 'public');
+        $doctor = Doctor::create([
+            ...$data,
+            'profile_picture' => $path,
+        ]);
         return redirect(route('schedule.create', $doctor->id));
     });
 

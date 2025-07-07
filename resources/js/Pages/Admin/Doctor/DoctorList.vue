@@ -67,16 +67,33 @@ function deleteDoctor(id: number) {
             </div>
             <div class="flex flex-wrap gap-4">
                 <Card
-                    class="w-[32rem]"
-                    v-for="doctor of doctors"
+                    class="mx-auto w-full max-w-md"
+                    v-for="doctor in doctors"
                     :key="doctor.id"
                 >
-                    <template #title>Dr. {{ doctor.name }}</template>
-                    <template #subtitle
-                        >Expertise: {{ doctor.specialty }}</template
-                    >
+                    <!-- Doctor Info -->
+                    <template #title>
+                        <div class="flex items-center gap-4">
+                            <img
+                                :src="`/storage/${doctor.profile_picture}`"
+                                :alt="`Photo of Dr. ${doctor.name}`"
+                                class="h-16 w-16 rounded-full object-cover"
+                            />
+                            <p class="text-xl font-semibold">
+                                Dr. {{ doctor.name }}
+                            </p>
+                        </div>
+                    </template>
+
+                    <template #subtitle>
+                        <div class="text-sm text-gray-600">
+                            Specialization: {{ doctor.specialty }}
+                        </div>
+                    </template>
+
+                    <!-- Actions -->
                     <template #content>
-                        <div class="flex gap-4">
+                        <div class="mt-4 flex flex-wrap items-center gap-2">
                             <template v-if="doctor.schedules_exists">
                                 <Button
                                     label="See Schedule"
@@ -85,33 +102,40 @@ function deleteDoctor(id: number) {
                                             route('schedule.view', doctor.id),
                                         )
                                     "
+                                    class="!h-auto flex-1 !py-2 text-sm font-medium"
                                 />
                                 <Link
                                     :href="route('schedule.edit', doctor.id)"
-                                    class="rounded-md bg-primary px-3 py-2 text-white"
-                                    >Edit Schedule</Link
+                                    class="flex-1 rounded-md bg-primary px-4 py-2 text-center text-sm font-medium text-white hover:brightness-110"
                                 >
+                                    Edit Schedule
+                                </Link>
                                 <Link
                                     :href="
                                         route('admin.dashboard', {
                                             code: doctor.code,
                                         })
                                     "
-                                    class="rounded-md px-3 py-2 bg-highlight"
-                                    >See Appointments</Link
+                                    class="flex-1 rounded-md px-4 py-2 text-center text-sm font-medium text-white bg-highlight hover:brightness-110"
                                 >
+                                    See Appointments
+                                </Link>
                             </template>
+
                             <Link
-                                :href="route('schedule.create', doctor.id)"
                                 v-else
-                                class="rounded-md bg-primary px-3 py-2 text-white"
-                                >Create Schedule</Link
+                                :href="route('schedule.create', doctor.id)"
+                                class="flex-1 rounded-md bg-primary px-4 py-2 text-center text-sm font-medium text-white hover:brightness-110"
                             >
+                                Create Schedule
+                            </Link>
+
                             <Button
                                 label="Delete"
                                 icon="pi pi-trash"
                                 @click="deleteDoctor(doctor.id)"
                                 severity="danger"
+                                class="!h-auto w-full !py-2 text-sm font-medium md:w-auto"
                             />
                         </div>
                     </template>

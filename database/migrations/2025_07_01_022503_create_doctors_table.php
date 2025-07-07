@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->string('specialty');
+            $table->string('profile_picture')->nullable();
             $table->timestamps();
         });
     }
