@@ -45,10 +45,17 @@ Route::middleware(['auth'])->group(function () {
             ->name('verification.send');
     });
 
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.edit');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::prefix('/profile')->name('profile')->group(function () {
 
-    Route::post('/profile/password', [PasswordController::class, 'update'])->name('profile.password');
+        Route::controller(ProfileController::class)
+            ->group(function () {
+            Route::get('/', 'show')->name('.edit');
+            Route::post('/', 'update')->name('.update');
+            Route::delete('/', 'destroy')->name('.destroy');
+        });
+
+        Route::post('/password', [PasswordController::class, 'update'])
+            ->name('.password');
+    });
 
 });
