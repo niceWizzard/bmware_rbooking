@@ -43,7 +43,7 @@ function logout() {
 
 <template>
     <aside
-        class="fixed left-0 top-0 flex h-screen w-[14rem] flex-col items-center justify-between bg-primary py-6"
+        class="left-0 top-0 flex flex-col items-center justify-between bg-primary py-6 max-sm:h-[14rem] max-sm:w-full sm:fixed sm:h-screen sm:w-[14rem]"
     >
         <h3 class="text-xl font-semibold text-white">Booking</h3>
         <nav class="mt-8 flex w-full flex-1 flex-col">
