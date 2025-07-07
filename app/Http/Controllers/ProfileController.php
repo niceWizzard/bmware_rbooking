@@ -20,10 +20,24 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-            'patient' => $user?->patient,
-            'admin' => $user?->admin,
+            'patient' => $user?->patient?->only([
+                'first_name',
+                'middle_name',
+                'last_name',
+                'birthdate',
+                'gender',
+                'civil_status',
+                'height',
+                'weight',
+                'mobile',
+                'telephone',
+                'address',
+                'occupation',
+                'guardian_name',
+                'relationship',
+                'guardian_address',
+            ]),
+            'admin' => $user?->admin?->only('name','id'),
         ]);
     }
 
