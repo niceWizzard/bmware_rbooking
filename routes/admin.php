@@ -43,6 +43,17 @@ Route::middleware(['auth', 'only.admin'])
             'doctors' => $doctors,
         ]);
     })->name('.list');
+
+    Route::delete('/{id}', static function (string $id) {
+        $doctor = Doctor::findOrFail($id);
+        if(!Auth::user()->is_admin) {
+            abort(403, 'Unauthorized action.');
+        }
+        $doctor->delete();
+        return response()->json([
+            'success' => true,
+        ]);
+    })->name('.delete');
 });
 
 Route::middleware(['auth','only.admin'])

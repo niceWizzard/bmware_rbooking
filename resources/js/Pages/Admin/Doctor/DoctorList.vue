@@ -2,23 +2,66 @@
 import AuthLayout from '@/Layouts/AuthLayout.vue';
 import { Doctor } from '@/types';
 import { Head, Link, router } from '@inertiajs/vue3';
+import axios from 'axios';
+import { useConfirm, useToast } from 'primevue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
+import ConfirmDialog from 'primevue/confirmdialog';
 
 defineProps<{
     doctors: Doctor[];
 }>();
+
+const confirm = useConfirm();
+const toast = useToast();
+
+function deleteDoctor(id: number) {
+    confirm.require({
+        message: 'This is irreversible. Please confirm',
+        header: 'Delete doctor?',
+        icon: 'pi pi-exclamation-triangle',
+        rejectProps: {
+            label: 'Cancel',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptProps: {
+            label: 'Remove Doctor',
+            severity: 'danger',
+        },
+        accept: async () => {
+            try {
+                const res = await axios.delete(
+                    route('doctor.delete', { id: id }),
+                );
+                if (!res.data.success) throw new Error(res.data.message);
+                toast.add({
+                    severity: 'success',
+                    summary: 'Doctor deleted successfully',
+                });
+                window.location.reload();
+            } catch (e) {
+                const err = e as Error;
+                toast.add({
+                    severity: 'error',
+                    detail: err.message,
+                });
+            }
+        },
+    });
+}
 </script>
 
 <template>
     <Head title="List of Doctors" />
+    <ConfirmDialog></ConfirmDialog>
     <AuthLayout headerTitle="Doctors">
         <section class="p-8">
             <div class="flex w-full justify-between">
                 <h3 class="text-lg font-bold">Doctors</h3>
                 <Link
                     :href="route('doctor.create')"
-                    class="bg-primary rounded-md px-3 py-2 text-white"
+                    class="rounded-md bg-primary px-3 py-2 text-white"
                     >Create</Link
                 >
             </div>
@@ -45,7 +88,7 @@ defineProps<{
                                 />
                                 <Link
                                     :href="route('schedule.edit', doctor.id)"
-                                    class="bg-primary rounded-md px-3 py-2 text-white"
+                                    class="rounded-md bg-primary px-3 py-2 text-white"
                                     >Edit Schedule</Link
                                 >
                                 <Link
@@ -54,16 +97,22 @@ defineProps<{
                                             code: doctor.code,
                                         })
                                     "
-                                    class="bg-highlight rounded-md px-3 py-2"
+                                    class="rounded-md px-3 py-2 bg-highlight"
                                     >See Appointments</Link
                                 >
                             </template>
                             <Link
                                 :href="route('schedule.create', doctor.id)"
                                 v-else
-                                class="bg-primary rounded-md px-3 py-2 text-white"
+                                class="rounded-md bg-primary px-3 py-2 text-white"
                                 >Create Schedule</Link
                             >
+                            <Button
+                                label="Delete"
+                                icon="pi pi-trash"
+                                @click="deleteDoctor(doctor.id)"
+                                severity="danger"
+                            />
                         </div>
                     </template>
                 </Card>
