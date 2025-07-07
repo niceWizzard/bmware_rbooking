@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\Auth\PatientInfoController;
 use App\Http\Controllers\Patient\PatientBookingController;
 use Inertia\Inertia;
 
@@ -30,6 +31,8 @@ Route::prefix('/patient')
 
             Route::get('/change/fetch', 'fetchChangeTimeSlots')->name('.change.fetch');
     });
+
+        Route::post('/', [PatientInfoController::class, 'update'])->name('.profile');
 
 
 });

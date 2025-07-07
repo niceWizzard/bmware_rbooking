@@ -33,6 +33,24 @@ export interface Doctor {
     schedules_exists: boolean;
 }
 
+export interface Patient {
+    first_name: string;
+    middle_name?: string | null;
+    last_name: string;
+    birthdate: string;
+    gender: string;
+    civil_status: string;
+    height?: string | null;
+    weight?: string | null;
+    mobile: string;
+    telephone?: string | null;
+    address?: string | null;
+    occupation?: string | null;
+    guardian_name?: string | null;
+    relationship?: string | null;
+    guardian_address?: string | null;
+}
+
 export interface Schedule {
     id: number;
     clinic: string;
