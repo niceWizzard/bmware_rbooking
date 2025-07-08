@@ -52,4 +52,11 @@ class Patient extends Model
     public function appointments() : HasMany {
         return $this->hasMany(Appointment::class, 'patient_id', 'id');
     }
+
+    public function appointmentsCreatedToday()
+    {
+        return $this->appointments()->whereDate('created_at', Carbon::today())->get();
+    }
+
+
 }

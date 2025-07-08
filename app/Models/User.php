@@ -106,4 +106,8 @@ class User extends Authenticatable implements MustVerifyEmail
         ]);
     }
 
+    public function canStillBookToday() : bool {
+        return $this->patient->appointmentsCreatedToday()->count() < 3;
+    }
+
 }

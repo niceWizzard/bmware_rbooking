@@ -111,6 +111,13 @@ class PatientBookingController extends Controller
             ]);
         }
 
+        if(!Auth::user()->canStillBookToday()) {
+            return \response()->json([
+               'success'=> false,
+               'message' => 'You can only book up to 3 appointments per day.'
+            ]);
+        }
+
         if(
             Appointment::isDoctorBookedAt($doctor, $date) ||
             Appointment::isPatientBookedAt(Auth::user()->patient, $date)
