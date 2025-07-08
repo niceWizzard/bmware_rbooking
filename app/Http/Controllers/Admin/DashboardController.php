@@ -80,6 +80,7 @@ class DashboardController extends Controller
                 'start' => $appointment->appointment_start_date_time,
                 'end' => $appointment->appointment_end_date_time,
                 'title' => $appointment->clinic,
+                'patient' => $appointment->details->patient->getFullName(),
             ];
         })->toArray();
     }

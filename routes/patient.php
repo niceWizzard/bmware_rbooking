@@ -25,6 +25,7 @@ Route::prefix('/patient')
     Route::controller(AppointmentController::class)
         ->prefix('/appointment/{id}')
         ->name('.appointment')
+        ->withoutMiddleware('only.patient')
         ->group(function () {
             Route::delete('/', 'delete')->name('.delete');
             Route::get('/change', 'showChangeTime')->name('.change');

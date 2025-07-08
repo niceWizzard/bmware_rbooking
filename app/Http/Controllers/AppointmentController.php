@@ -21,7 +21,7 @@ class AppointmentController extends Controller
                 'message' => 'Sorry, appointment with id ' . $id . ' cannot be found'
             ]);
         }
-        if (Auth::user()->patient_id !== $appointment->patient_id) {
+        if (Auth::user()->patient_id !== $appointment->patient_id && !Auth::user()->is_admin) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sorry, you are not allowed to delete this appointment',
