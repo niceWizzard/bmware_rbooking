@@ -3,6 +3,9 @@ import Input from '@/Components/Input.vue';
 import CardLayout from '@/Layouts/CardLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import Button from 'primevue/button';
+import FloatLabel from 'primevue/floatlabel';
+import InputMask from 'primevue/inputmask';
+
 defineProps<{}>();
 const form = useForm({
     email: '',
@@ -12,6 +15,13 @@ const form = useForm({
     last_name: '',
     mobile: '',
 });
+
+function submit() {
+    form.transform((v) => ({
+        ...v,
+        mobile: v.mobile.replaceAll('-', ''),
+    })).post(route('register'));
+}
 </script>
 
 <template>
@@ -20,10 +30,7 @@ const form = useForm({
         <template #header>
             <h3 class="text-center text-2xl font-bold">Register</h3>
         </template>
-        <form
-            @submit.prevent="form.post(route('register'))"
-            class="flex w-96 flex-col gap-4"
-        >
+        <form @submit.prevent="submit" class="flex w-96 flex-col gap-4">
             <div class="flex gap-2">
                 <Input
                     id="first_name"
@@ -47,13 +54,20 @@ const form = useForm({
                 v-model="form.email"
                 type="email"
             />
-            <Input
-                id="mobile"
-                label="Mobile Number"
-                :error="form.errors.mobile"
-                v-model="form.mobile"
-                type="text"
-            />
+            <FloatLabel variant="on">
+                <label>Mobile Number</label>
+                <InputMask
+                    mask="0999-999-9999"
+                    v-model="form.mobile"
+                    class="w-full"
+                />
+                <p
+                    class="mt-1 text-sm font-light text-red-500"
+                    v-if="form.errors.mobile"
+                >
+                    {{ form.errors.mobile }}
+                </p>
+            </FloatLabel>
             <Input
                 id="password"
                 label="Password"
@@ -71,7 +85,7 @@ const form = useForm({
             <Button type="submit" :loading="form.processing" label="Continue" />
             <p class="text-center font-light">
                 Already have an account?
-                <Link :href="route('login')" class="text-primary font-medium">
+                <Link :href="route('login')" class="font-medium text-primary">
                     Login
                 </Link>
             </p>
