@@ -104,7 +104,7 @@ function finishButtonClicked() {
 
     if (!safe) return;
 
-    router.post(route('schedule.create', props.doctor.id), { events });
+    router.post(route('schedule.store', props.doctor.id), { events });
 }
 </script>
 

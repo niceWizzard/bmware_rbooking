@@ -33,10 +33,10 @@ Route::middleware(['auth', 'only.admin'])
     ->controller(DoctorScheduleController::class)
     ->group(static function () {
         Route::get('/create', 'create')->name('.create');
-        Route::post('/create', 'store');
+        Route::post('/create', 'store')->name('.store');
         Route::get('/', 'view')->name('.view');
         Route::get('/edit', 'edit')->name('.edit');
-        Route::post('/edit', 'update');
+        Route::post('/edit', 'update')->name('.update');
     });
 
     Route::prefix('/patient')

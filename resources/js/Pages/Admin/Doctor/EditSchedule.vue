@@ -75,7 +75,7 @@ async function update() {
     if (!safe) return;
 
     try {
-        const res = await axios.post(route('schedule.edit', doctor.id), {
+        const res = await axios.post(route('schedule.update', doctor.id), {
             events,
         });
         if (!res.data.success) {
