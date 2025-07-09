@@ -28,6 +28,10 @@ const navLinks =
                   text: 'Doctors',
                   link: route('doctor.list'),
               },
+              {
+                  text: 'Patients',
+                  link: route('patient.list'),
+              },
           ];
 
 const overlayRef = ref();

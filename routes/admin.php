@@ -4,13 +4,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Auth\AdminInfoController;
 use App\Http\Controllers\DoctorScheduleController;
-use App\Models\Doctor;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Http\Controllers\PatientManagementController;
 
 Route::middleware(['auth', 'only.admin'])
 ->group(static function () {
-
     Route::prefix('/admin')
         ->name('admin')
         ->group(static function () {
@@ -41,4 +38,12 @@ Route::middleware(['auth', 'only.admin'])
         Route::get('/edit', 'edit')->name('.edit');
         Route::post('/edit', 'update');
     });
+
+    Route::prefix('/patient')
+        ->name('patient')
+        ->controller(PatientManagementController::class)
+        ->group(static function () {
+            Route::get('/', 'index')->name('.list');
+            Route::delete('/{id}', 'delete')->name('.delete');
+        });
 });
