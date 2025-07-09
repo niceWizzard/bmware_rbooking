@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\Doctor;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use \Illuminate\Support\Facades\Auth;
 
 Route::get('/', static function () {
     if(Auth::check()) {
