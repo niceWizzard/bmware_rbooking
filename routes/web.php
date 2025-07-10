@@ -100,9 +100,7 @@ Route::prefix('/patient')
             Route::get('/doctors', 'showDoctorList')
                 ->withoutMiddleware(['only.patient', 'auth'])
                 ->name('.doctors');
-
             Route::get('/book/refetch', 'fetchBookingSlots')->name('.book.fetch');
-
             Route::get('/book', 'showBooking')->name('.book');
             Route::post('/book', 'bookAppointment');
         });
@@ -153,6 +151,8 @@ Route::middleware(['auth', 'only.admin'])
                 Route::get('/create', 'create')->name('.create');
                 Route::get('/', 'index')->name('.list');
                 Route::delete('/{id}', 'delete')->name('.delete');
+                Route::get('/{id}/edit', 'edit')->name('.edit');
+                Route::post('/{id}', 'update')->name('.update');
             });
 
         Route::prefix('/schedule/{id}')

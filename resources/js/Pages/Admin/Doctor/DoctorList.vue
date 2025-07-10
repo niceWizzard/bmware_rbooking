@@ -73,15 +73,23 @@ function deleteDoctor(id: number) {
                 >
                     <!-- Doctor Info -->
                     <template #title>
-                        <div class="flex items-center gap-4">
-                            <img
-                                :src="`/storage/${doctor.profile_picture}`"
-                                :alt="`Photo of Dr. ${doctor.name}`"
-                                class="h-16 w-16 rounded-full object-cover"
-                            />
-                            <p class="text-xl font-semibold">
-                                Dr. {{ doctor.name }}
-                            </p>
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex flex-1 items-center gap-4">
+                                <img
+                                    :src="`/storage/${doctor.profile_picture}`"
+                                    :alt="`Photo of Dr. ${doctor.name}`"
+                                    class="h-16 w-16 rounded-full object-cover"
+                                />
+                                <p class="text-xl font-semibold">
+                                    Dr. {{ doctor.name }}
+                                </p>
+                            </div>
+                            <Link
+                                :href="route('doctor.edit', { id: doctor.id })"
+                                class="rounded-md bg-primary px-4 py-2 text-center text-sm font-medium text-white hover:brightness-110"
+                            >
+                                Edit
+                            </Link>
                         </div>
                     </template>
 
